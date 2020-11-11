@@ -90,6 +90,14 @@ static uint32_t CreateShader(const std::string& vertexShader, const std::string&
     return program;
 }
 
+static void IncrementColorValue(float_t &increment, float_t &color)
+{
+    if (color > 1.0f || color < 0.0f)
+        increment *= -1;
+
+    color += increment;
+}
+
 void GLAPIENTRY OnGLError(GLenum source,
              GLenum type,
              GLuint id,
@@ -182,18 +190,9 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if (r > 1.0f || r < 0.0f)
-            i_r *= -1;
-
-        if (g > 1.0f || g < 0.0f)
-            i_g *= -1;
-
-        if (b > 1.0f || b < 0.0f)
-            i_b *= -1;
-
-        r += i_r;
-        g += i_g;
-        b += i_b;
+        IncrementColorValue(i_r, r);
+        IncrementColorValue(i_g, g);
+        IncrementColorValue(i_b, b);
 
         glUniform4f(uniformLocation, r, g, b, 1.0f);
 
