@@ -118,6 +118,11 @@ int main(void)
     if (!glfwInit())
         return -1;
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 640, "Hello World", NULL, NULL);
     if (!window)
@@ -136,6 +141,11 @@ int main(void)
     glDebugMessageCallback(OnGLError, 0);
 
     std::cout << glGetString(GL_VERSION) << "\n" << glGetString(GL_RENDERER) << std::endl;
+
+    uint32_t vao;
+
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
     const uint32_t TRIANGLE_VERTEX_COUNT = 4;
     const uint32_t VERTEX_COMPONENT_COUNT = 2;
@@ -172,8 +182,6 @@ int main(void)
     ShaderProgram shaderProgram = ParseShader("res/shaders/Basic.shader");
     uint32_t shader = CreateShader(shaderProgram.VertexShader, shaderProgram.FragmentShader);
 
-    glUseProgram(shader);
-
     float_t r = 0.0f;
     float_t g = 0.3f;
     float_t b = 0.9f;
@@ -182,13 +190,14 @@ int main(void)
     float_t i_b = 0.003f;
 
     int32_t uniformLocation = glGetUniformLocation(shader, "u_Color");
-    
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(shader);
 
         IncrementColorValue(i_r, r);
         IncrementColorValue(i_g, g);
