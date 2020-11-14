@@ -6,6 +6,9 @@
 #include <string>
 #include <sstream>
 
+#include "../buffer/vertex/VertexBuffer.h"
+#include "../buffer/index/IndexBuffer.h"
+
 struct ShaderProgram
 {
     std::string VertexShader;
@@ -45,7 +48,7 @@ static ShaderProgram ParseShader(const std::string& filepath)
     return { s_stream[(int) ShaderType::VERTEX].str(), s_stream[(int) ShaderType::FRAGMENT].str() };
 }
 
-static uint32_t CompileShader(uint32_t type, const std::string& source)
+static uint32_t compileShader(uint32_t type, const std::string& source)
 {
     uint32_t shaderId = glCreateShader(type);
     const char* shaderSource = source.c_str();
@@ -73,11 +76,11 @@ static uint32_t CompileShader(uint32_t type, const std::string& source)
     return shaderId;
 }
 
-static uint32_t CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+static uint32_t createShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
     uint32_t program = glCreateProgram();
-    uint32_t vertexShaderId = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    uint32_t fragmentShaderId = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+    uint32_t vertexShaderId = compileShader(GL_VERTEX_SHADER, vertexShader);
+    uint32_t fragmentShaderId = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
     glAttachShader(program, vertexShaderId);
     glAttachShader(program, fragmentShaderId);
@@ -90,7 +93,7 @@ static uint32_t CreateShader(const std::string& vertexShader, const std::string&
     return program;
 }
 
-static void IncrementColorValue(float_t &increment, float_t &color)
+static void incrementColorValue(float_t &increment, float_t &color)
 {
     if (color > 1.0f || color < 0.0f)
         increment *= -1;
@@ -98,7 +101,7 @@ static void IncrementColorValue(float_t &increment, float_t &color)
     color += increment;
 }
 
-void GLAPIENTRY OnGLError(GLenum source,
+void GLAPIENTRY onGLError(GLenum source,
              GLenum type,
              GLuint id,
              GLenum severity,
@@ -138,7 +141,7 @@ int main(void)
     glewInit();
 
     glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(OnGLError, 0);
+    glDebugMessageCallback(onGLError, 0);
 
     std::cout << glGetString(GL_VERSION) << "\n" << glGetString(GL_RENDERER) << std::endl;
 
@@ -157,11 +160,7 @@ int main(void)
     };
 
     const uint32_t VBO_SIZE = sizeof(positions);
-    uint32_t vbo;
-
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, VBO_SIZE, positions, GL_STATIC_DRAW);
+    VertexBuffer vbo(positions, VBO_SIZE);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, VERTEX_COMPONENT_COUNT, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_COMPONENT_COUNT, 0);
@@ -173,14 +172,10 @@ int main(void)
     };
 
     const uint32_t IBO_SIZE = sizeof(indecies);
-    uint32_t ibo;
-
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, IBO_SIZE, indecies, GL_STATIC_DRAW);
+    IndexBuffer ibo(indecies, INDECIES_COUNT);
 
     ShaderProgram shaderProgram = ParseShader("res/shaders/Basic.shader");
-    uint32_t shader = CreateShader(shaderProgram.VertexShader, shaderProgram.FragmentShader);
+    uint32_t shader = createShader(shaderProgram.VertexShader, shaderProgram.FragmentShader);
 
     float_t r = 0.0f;
     float_t g = 0.3f;
@@ -197,11 +192,9 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shader);
-
-        IncrementColorValue(i_r, r);
-        IncrementColorValue(i_g, g);
-        IncrementColorValue(i_b, b);
+        incrementColorValue(i_r, r);
+        incrementColorValue(i_g, g);
+        incrementColorValue(i_b, b);
 
         glUniform4f(uniformLocation, r, g, b, 1.0f);
 
