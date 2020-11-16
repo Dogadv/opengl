@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include "../buffer/vertex/VertexBuffer.h"
+#include "../buffer/vertex/VertexArray.h"
 #include "../buffer/index/IndexBuffer.h"
 
 struct ShaderProgram
@@ -145,11 +146,6 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << "\n" << glGetString(GL_RENDERER) << std::endl;
 
-    uint32_t vao;
-
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
     const uint32_t TRIANGLE_VERTEX_COUNT = 4;
     const uint32_t VERTEX_COMPONENT_COUNT = 2;
     float positions[TRIANGLE_VERTEX_COUNT * VERTEX_COMPONENT_COUNT] = {
@@ -160,10 +156,13 @@ int main(void)
     };
 
     const uint32_t VBO_SIZE = sizeof(positions);
-    VertexBuffer vbo(positions, VBO_SIZE);
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, VERTEX_COMPONENT_COUNT, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_COMPONENT_COUNT, 0);
+    VertexArray vertexArray;
+    VertexBuffer vertexBuffer(positions, VBO_SIZE);
+    VertexBufferLayout vertexBufferLayout;
+
+    vertexBufferLayout.push<GLfloat>(VERTEX_COMPONENT_COUNT);
+    vertexArray.addBuffer(vertexBuffer, vertexBufferLayout);
 
     const uint32_t INDECIES_COUNT = 6;
     uint32_t indecies[INDECIES_COUNT] = {
@@ -172,7 +171,7 @@ int main(void)
     };
 
     const uint32_t IBO_SIZE = sizeof(indecies);
-    IndexBuffer ibo(indecies, INDECIES_COUNT);
+    IndexBuffer indexBuffer(indecies, INDECIES_COUNT);
 
     ShaderProgram shaderProgram = ParseShader("res/shaders/Basic.shader");
     uint32_t shader = createShader(shaderProgram.VertexShader, shaderProgram.FragmentShader);
@@ -199,6 +198,8 @@ int main(void)
         incrementColorValue(i_b, b);
 
         glUniform4f(uniformLocation, r, g, b, 1.0f);
+
+        indexBuffer.bind();
 
         glDrawElements(GL_TRIANGLES, INDECIES_COUNT, GL_UNSIGNED_INT, nullptr);
 
