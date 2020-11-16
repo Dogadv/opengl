@@ -177,6 +177,8 @@ int main(void)
     ShaderProgram shaderProgram = ParseShader("res/shaders/Basic.shader");
     uint32_t shader = createShader(shaderProgram.VertexShader, shaderProgram.FragmentShader);
 
+    glUseProgram(shader);
+
     float_t r = 0.0f;
     float_t g = 0.3f;
     float_t b = 0.9f;
