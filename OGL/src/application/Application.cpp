@@ -7,6 +7,8 @@
 #include "../buffer/vertex/VertexBuffer.h"
 #include "../buffer/vertex/VertexArray.h"
 #include "../buffer/index/IndexBuffer.h"
+#include "../shader/Shader.h"
+
 
 static void incrementColorValue(float_t &increment, float_t &color)
 {
@@ -86,10 +88,9 @@ int main(void)
     const uint32_t IBO_SIZE = sizeof(indecies);
     IndexBuffer indexBuffer(indecies, INDECIES_COUNT);
 
-    ShaderProgram shaderProgram = ParseShader("res/shaders/Basic.shader");
-    uint32_t shader = createShader(shaderProgram.VertexShader, shaderProgram.FragmentShader);
+    Shader shader("res/shaders/Basic.shader");
 
-    glUseProgram(shader);
+    shader.bind();
 
     float_t r = 0.0f;
     float_t g = 0.3f;
@@ -97,8 +98,6 @@ int main(void)
     float_t i_r = 0.003f;
     float_t i_g = 0.003f;
     float_t i_b = 0.003f;
-
-    int32_t uniformLocation = glGetUniformLocation(shader, "u_Color");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -110,8 +109,7 @@ int main(void)
         incrementColorValue(i_g, g);
         incrementColorValue(i_b, b);
 
-        glUniform4f(uniformLocation, r, g, b, 1.0f);
-
+        shader.setUniform4f("u_Color", r, g, b, 1.0f);
         indexBuffer.bind();
 
         glDrawElements(GL_TRIANGLES, INDECIES_COUNT, GL_UNSIGNED_INT, nullptr);
@@ -123,7 +121,7 @@ int main(void)
         glfwPollEvents();
     }
 
-    glDeleteProgram(shader);
+    shader.unbind();
 
     glfwTerminate();
     return 0;
