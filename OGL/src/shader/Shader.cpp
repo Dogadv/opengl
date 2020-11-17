@@ -111,9 +111,14 @@ uint32_t Shader::compileShader(uint32_t type, const std::string& source)
 
 int32_t Shader::getUniformLocation(const std::string& name)
 {
+    if (m_uniformLocationCache.find(name) != m_uniformLocationCache.end())
+        return m_uniformLocationCache[name];
+
     int32_t location = glGetUniformLocation(m_rendererId, name.c_str());
     if (location == -1)
         std::cout << "ERROR! uniform: " << name << " was not found in a shader declaratiom" << std::endl;
+    
+    m_uniformLocationCache[name] = location;
 
     return location;
 }
