@@ -1,7 +1,10 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
+
 #include <GL/glew.h>
+
 
 struct ShaderProgram
 {
@@ -22,6 +25,7 @@ public:
 
 private:
 	uint32_t m_rendererId;
+	std::unordered_map<std::string, int32_t> m_uniformLocationCache;
 
 	uint32_t compileShader(uint32_t type, const std::string& source);
 	ShaderProgram parseShader(const std::string& filepath);
