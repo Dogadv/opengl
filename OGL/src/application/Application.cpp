@@ -7,9 +7,9 @@
 #include "../buffer/vertex/VertexBuffer.h"
 #include "../buffer/vertex/VertexArray.h"
 #include "../buffer/index/IndexBuffer.h"
+#include "../texture/Texture.h"
 #include "../shader/Shader.h"
 #include "../Renderer.h"
-
 
 static void incrementColorValue(float_t &increment, float_t &color)
 {
@@ -27,7 +27,10 @@ void GLAPIENTRY onGLError(GLenum source,
              const GLchar* message,
              const void* userParam)
 {
-    std::cout << "type: " << type << ";message: " << message << std::endl;
+    std::cout << 
+        "ERROR: " << type <<
+        "\nMessage: " << message <<
+        "\n" << std::endl;
     //__debugbreak();
 }
 
@@ -60,15 +63,19 @@ int main(void)
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(onGLError, 0);
 
-    std::cout << glGetString(GL_VERSION) << "\n" << glGetString(GL_RENDERER) << std::endl;
+    std::cout << glGetString(GL_VERSION) << "\n" << glGetString(GL_RENDERER) << "\n" << std::endl;
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     const uint32_t TRIANGLE_VERTEX_COUNT = 4;
-    const uint32_t VERTEX_COMPONENT_COUNT = 2;
-    float positions[TRIANGLE_VERTEX_COUNT * VERTEX_COMPONENT_COUNT] = {
-        -.5f, -.5f,
-         .5f,  -.5f,
-         .5f,  .5f,
-        -.5f,  .5f
+    const uint32_t GEOMETRY_VERTEX_COMPONENT_COUNT = 2;
+    const uint32_t TEXTURE_VERTEX_COMPONENT_COUNT = 2;
+    float positions[TRIANGLE_VERTEX_COUNT * (GEOMETRY_VERTEX_COMPONENT_COUNT + TEXTURE_VERTEX_COMPONENT_COUNT)] = {
+        -.5f, -.5f,  .0f , .0f,
+         .5f, -.5f, 1.0f,  .0f,
+         .5f,  .5f, 1.0f, 1.0f,
+        -.5f,  .5f,  .0f, 1.0f  
     };
 
     const uint32_t VBO_SIZE = sizeof(positions);
@@ -77,7 +84,9 @@ int main(void)
     VertexBuffer vertexBuffer(positions, VBO_SIZE);
     VertexBufferLayout vertexBufferLayout;
 
-    vertexBufferLayout.push<GLfloat>(VERTEX_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLfloat>(GEOMETRY_VERTEX_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLfloat>(TEXTURE_VERTEX_COMPONENT_COUNT);
+
     vertexArray.addBuffer(vertexBuffer, vertexBufferLayout);
 
     const uint32_t INDECIES_COUNT = 6;
@@ -90,8 +99,12 @@ int main(void)
     IndexBuffer indexBuffer(indecies, INDECIES_COUNT);
 
     Shader shader("res/shaders/Basic.shader");
+    Texture texture("res/textures/texture.png");
 
     shader.bind();
+    texture.bind();
+
+    shader.setUniform1i("u_texture", 0);
 
     float_t r = 0.0f;
     float_t g = 0.3f;
@@ -112,7 +125,7 @@ int main(void)
         incrementColorValue(i_g, g);
         incrementColorValue(i_b, b);
 
-        shader.setUniform4f("u_Color", r, g, b, 1.0f);
+        shader.setUniform4f("u_color", r, g, b, 1.0f);
 
         renderer.draw(vertexArray, indexBuffer);
 
