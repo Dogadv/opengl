@@ -31,6 +31,11 @@ void Shader::setUniform4f(const std::string& name, GLfloat v0, GLfloat v1, GLflo
     glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
 }
 
+void Shader::setUniform1i(const std::string& name, GLuint value) {
+    glUniform1i(getUniformLocation(name), value);
+}
+
+
 ShaderProgram Shader::parseShader(const std::string& filepath)
 {
     enum class ShaderType
