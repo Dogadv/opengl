@@ -8,6 +8,7 @@
 #include "../buffer/vertex/VertexArray.h"
 #include "../buffer/index/IndexBuffer.h"
 #include "../shader/Shader.h"
+#include "../Renderer.h"
 
 
 static void incrementColorValue(float_t &increment, float_t &color)
@@ -99,20 +100,21 @@ int main(void)
     float_t i_g = 0.003f;
     float_t i_b = 0.003f;
 
+    Renderer renderer;
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer.clear();
 
         incrementColorValue(i_r, r);
         incrementColorValue(i_g, g);
         incrementColorValue(i_b, b);
 
         shader.setUniform4f("u_Color", r, g, b, 1.0f);
-        indexBuffer.bind();
 
-        glDrawElements(GL_TRIANGLES, INDECIES_COUNT, GL_UNSIGNED_INT, nullptr);
+        renderer.draw(vertexArray, indexBuffer);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -120,8 +122,6 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-
-    shader.unbind();
 
     glfwTerminate();
     return 0;

@@ -149,6 +149,7 @@
     <ClCompile Include="src\buffer\index\IndexBuffer.cpp" />
     <ClCompile Include="src\buffer\vertex\VertexArray.cpp" />
     <ClCompile Include="src\buffer\vertex\VertexBuffer.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\shader\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
