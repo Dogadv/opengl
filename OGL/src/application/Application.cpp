@@ -1,6 +1,3 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <iostream>
 #include <string>
 
@@ -19,54 +16,9 @@ static void incrementColorValue(float_t &increment, float_t &color)
     color += increment;
 }
 
-void GLAPIENTRY onGLError(GLenum source,
-             GLenum type,
-             GLuint id,
-             GLenum severity,
-             GLsizei length,
-             const GLchar* message,
-             const void* userParam)
-{
-    std::cout << 
-        "ERROR: " << type <<
-        "\nMessage: " << message <<
-        "\n" << std::endl;
-    //__debugbreak();
-}
-
 int main(void)
 {
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 640, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-
-    /* Initialize GLEW */
-    glewInit();
-
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(onGLError, 0);
-
-    std::cout << glGetString(GL_VERSION) << "\n" << glGetString(GL_RENDERER) << "\n" << std::endl;
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Renderer renderer("Hello, OpenGL!", 800, 800);
 
     const uint32_t TRIANGLE_VERTEX_COUNT = 4;
     const uint32_t GEOMETRY_VERTEX_COMPONENT_COUNT = 2;
@@ -113,12 +65,8 @@ int main(void)
     float_t i_g = 0.003f;
     float_t i_b = 0.003f;
 
-    Renderer renderer;
-
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (renderer.isRunning())
     {
-        /* Render here */
         renderer.clear();
 
         incrementColorValue(i_r, r);
@@ -128,12 +76,6 @@ int main(void)
         shader.setUniform4f("u_color", r, g, b, 1.0f);
 
         renderer.draw(vertexArray, indexBuffer);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-
-        /* Poll for and process events */
-        glfwPollEvents();
     }
 
     glfwTerminate();
