@@ -35,6 +35,9 @@ void Shader::setUniform1i(const std::string& name, GLuint value) {
     glUniform1i(getUniformLocation(name), value);
 }
 
+void Shader::setUniformMat4f(const std::string& name, glm::mat4 value) {
+    glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &value[0][0]);
+}
 
 ShaderProgram Shader::parseShader(const std::string& filepath)
 {
