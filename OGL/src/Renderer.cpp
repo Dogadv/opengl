@@ -48,6 +48,8 @@ Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    projection = glm::ortho(.0f, (float) width, .0f, (float) height);
 }
 
 /* Loop until the user closes the window */

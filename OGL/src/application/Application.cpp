@@ -18,16 +18,20 @@ static void incrementColorValue(float_t &increment, float_t &color)
 
 int main(void)
 {
-    Renderer renderer("Hello, OpenGL!", 800, 800);
+    const uint32_t width = 640;
+    const uint32_t height = 360;
+
+    Renderer renderer("Hello, OpenGL!", width, height);
+
 
     const uint32_t TRIANGLE_VERTEX_COUNT = 4;
     const uint32_t GEOMETRY_VERTEX_COMPONENT_COUNT = 2;
     const uint32_t TEXTURE_VERTEX_COMPONENT_COUNT = 2;
     float positions[TRIANGLE_VERTEX_COUNT * (GEOMETRY_VERTEX_COMPONENT_COUNT + TEXTURE_VERTEX_COMPONENT_COUNT)] = {
-        -.5f, -.5f,  .0f , .0f,
-         .5f, -.5f, 1.0f,  .0f,
-         .5f,  .5f, 1.0f, 1.0f,
-        -.5f,  .5f,  .0f, 1.0f  
+        100.0f, 100.0f,  .0f , .0f,
+        300.0f, 100.0f, 1.0f,  .0f,
+        300.0f, 300.0f, 1.0f, 1.0f,
+        100.0f, 300.0f,  .0f, 1.0f
     };
 
     const uint32_t VBO_SIZE = sizeof(positions);
@@ -74,6 +78,7 @@ int main(void)
         incrementColorValue(i_b, b);
 
         shader.setUniform4f("u_color", r, g, b, 1.0f);
+        shader.setUniformMat4f("u_mvp", renderer.getProjection());
 
         renderer.draw(vertexArray, indexBuffer);
     }

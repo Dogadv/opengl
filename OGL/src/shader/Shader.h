@@ -5,6 +5,7 @@
 
 #include <GL/glew.h>
 
+#include "glm/glm.hpp"
 
 struct ShaderProgram
 {
@@ -23,6 +24,7 @@ public:
 
 	void setUniform4f(const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
 	void setUniform1i(const std::string& name, GLuint value);
+	void setUniformMat4f(const std::string& name, glm::mat4 value);
 
 private:
 	uint32_t m_rendererId;

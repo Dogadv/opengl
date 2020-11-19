@@ -8,6 +8,9 @@
 #include "buffer/vertex/VertexArray.h"
 #include "buffer/index/IndexBuffer.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 class Renderer
 {
 public:
@@ -17,6 +20,9 @@ public:
 	void clear() const;
 	void draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer) const;
 
+	inline glm::mat4 getProjection() const { return projection; }
+
 private:
 	GLFWwindow* m_window;
+	glm::mat4 projection;
 };
