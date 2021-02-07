@@ -78,7 +78,7 @@ int main(void)
         incrementColorValue(i_b, b);
 
         shader.setUniform4f("u_color", r, g, b, 1.0f);
-        shader.setUniformMat4f("u_mvp", renderer.getProjection());
+        shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix());
 
         renderer.draw(vertexArray, indexBuffer);
     }

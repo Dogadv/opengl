@@ -50,6 +50,10 @@ Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     projection = glm::ortho(.0f, (float) width, .0f, (float) height);
+
+    // Hardcoded offset values for testing purpose
+    view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+    model = glm::translate(glm::mat4(1.0f), glm::vec3(225, -15, 0));
 }
 
 /* Loop until the user closes the window */
