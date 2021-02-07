@@ -20,9 +20,11 @@ public:
 	void clear() const;
 	void draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer) const;
 
-	inline glm::mat4 getProjection() const { return projection; }
+	inline glm::mat4 getMVPMatrix() const { return projection * view * model; }
 
 private:
 	GLFWwindow* m_window;
 	glm::mat4 projection;
+	glm::mat4 view;
+	glm::mat4 model;
 };
