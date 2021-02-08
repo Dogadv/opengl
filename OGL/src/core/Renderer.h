@@ -5,8 +5,8 @@
 
 #include <string>
 
-#include "buffer/vertex/VertexArray.h"
-#include "buffer/index/IndexBuffer.h"
+#include "../buffer/vertex/VertexArray.h"
+#include "../buffer/index/IndexBuffer.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"

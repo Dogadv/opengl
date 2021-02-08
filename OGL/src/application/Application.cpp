@@ -6,7 +6,7 @@
 #include "../buffer/index/IndexBuffer.h"
 #include "../texture/Texture.h"
 #include "../shader/Shader.h"
-#include "../Renderer.h"
+#include "../core/Renderer.h"
 
 static void incrementColorValue(float_t &increment, float_t &color)
 {
