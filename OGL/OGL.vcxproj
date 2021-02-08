@@ -295,6 +295,7 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\application\Window.h" />
     <ClInclude Include="src\buffer\index\IndexBuffer.h" />
     <ClInclude Include="src\buffer\vertex\VertexArray.h" />
     <ClInclude Include="src\buffer\vertex\VertexBuffer.h" />

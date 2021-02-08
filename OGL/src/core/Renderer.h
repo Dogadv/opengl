@@ -18,13 +18,19 @@ public:
 
 	bool isRunning() const;
 	void clear() const;
-	void draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer) const;
+	void draw(
+		const VertexArray& vertexArray,
+		const IndexBuffer& indexBuffer
+	) const;
 
-	inline glm::mat4 getMVPMatrix() const { return projection * view * model; }
+	inline glm::mat4 getMVPMatrix(const glm::vec3 modelTranslation, const glm::vec3 viewTranslation) const {
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), viewTranslation);
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), modelTranslation);
+
+		return projection * view * model; 
+	}
 
 private:
 	GLFWwindow* m_window;
 	glm::mat4 projection;
-	glm::mat4 view;
-	glm::mat4 model;
 };
