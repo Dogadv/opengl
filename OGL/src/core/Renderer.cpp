@@ -60,7 +60,13 @@ bool Renderer::isRunning() const
 
 void Renderer::clear() const
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+    /* Swap front and back buffers */
+    glfwSwapBuffers(m_window);
+
+    /* Poll for and process events */
+    glfwPollEvents();
+
+	glClear(GL_COLOR_BUFFER_BIT); 
 }
 
 void Renderer::draw(
@@ -71,10 +77,4 @@ void Renderer::draw(
 	indexBuffer.bind();
 
 	glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, nullptr);
-
-    /* Swap front and back buffers */
-    glfwSwapBuffers(m_window);
-
-    /* Poll for and process events */
-    glfwPollEvents();
 }
