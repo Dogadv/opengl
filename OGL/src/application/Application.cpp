@@ -8,14 +8,6 @@
 #include "../shader/Shader.h"
 #include "../core/Renderer.h"
 
-static void incrementColorValue(float_t &increment, float_t &color)
-{
-    if (color > 1.0f || color < 0.0f)
-        increment *= -1;
-
-    color += increment;
-}
-
 int main(void)
 {
     const uint32_t width = 640;
@@ -23,15 +15,14 @@ int main(void)
 
     Renderer renderer("Hello, OpenGL!", width, height);
 
-
     const uint32_t TRIANGLE_VERTEX_COUNT = 4;
     const uint32_t GEOMETRY_VERTEX_COMPONENT_COUNT = 2;
     const uint32_t TEXTURE_VERTEX_COMPONENT_COUNT = 2;
     float positions[TRIANGLE_VERTEX_COUNT * (GEOMETRY_VERTEX_COMPONENT_COUNT + TEXTURE_VERTEX_COMPONENT_COUNT)] = {
-        100.0f, 100.0f,  .0f , .0f,
-        300.0f, 100.0f, 1.0f,  .0f,
-        300.0f, 300.0f, 1.0f, 1.0f,
-        100.0f, 300.0f,  .0f, 1.0f
+        -100.0f, -100.0f,  .0f , .0f,
+         100.0f, -100.0f, 1.0f,  .0f,
+         100.0f,  100.0f, 1.0f, 1.0f,
+        -100.0f,  100.0f,  .0f, 1.0f
     };
 
     const uint32_t VBO_SIZE = sizeof(positions);
@@ -62,25 +53,29 @@ int main(void)
 
     shader.setUniform1i("u_texture", 0);
 
-    float_t r = 0.0f;
-    float_t g = 0.3f;
-    float_t b = 0.9f;
-    float_t i_r = 0.003f;
-    float_t i_g = 0.003f;
-    float_t i_b = 0.003f;
+    glm::vec3 cameraTranslation(0, 0, 0);
+    glm::vec3 objectFooTranslation(100, 50, 0);
+    glm::vec3 objectBarTranslation(200, 150, 0);
 
     while (renderer.isRunning())
     {
         renderer.clear();
 
-        incrementColorValue(i_r, r);
-        incrementColorValue(i_g, g);
-        incrementColorValue(i_b, b);
+        { // Object Foo
+            shader.bind();
+            shader.setUniform4f("u_color", 1.0f, 0.0f, 0.0f, 1.0f);
+            shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(objectFooTranslation, cameraTranslation));
 
-        shader.setUniform4f("u_color", r, g, b, 1.0f);
-        shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix());
+            renderer.draw(vertexArray, indexBuffer);
+        }
+        
+        { // Object Bar
+            shader.bind();
+            shader.setUniform4f("u_color", 0.0f, 0.0f, 1.0f, 1.0f);
+            shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(objectBarTranslation, cameraTranslation));
 
-        renderer.draw(vertexArray, indexBuffer);
+            renderer.draw(vertexArray, indexBuffer);
+        }
     }
 
     glfwTerminate();
