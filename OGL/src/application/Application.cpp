@@ -8,12 +8,25 @@
 #include "../shader/Shader.h"
 #include "../core/Renderer.h"
 
+#include "../vendor/imgui/imgui.h"
+#include "../vendor/imgui/imgui_impl_glfw.h"
+#include "../vendor/imgui/imgui_impl_opengl3.h"
+
+const char* glsl_version = "#version 130";
+
 int main(void)
 {
-    const uint32_t width = 640;
-    const uint32_t height = 360;
+    const uint32_t width = 1280;
+    const uint32_t height = 720;
 
     Renderer renderer("Hello, OpenGL!", width, height);
+    GLFWwindow* window = renderer.getWindow();
+
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
 
     const uint32_t TRIANGLE_VERTEX_COUNT = 4;
     const uint32_t GEOMETRY_VERTEX_COMPONENT_COUNT = 2;
@@ -53,13 +66,17 @@ int main(void)
 
     shader.setUniform1i("u_texture", 0);
 
-    glm::vec3 cameraTranslation(0, 0, 0);
-    glm::vec3 objectFooTranslation(100, 50, 0);
-    glm::vec3 objectBarTranslation(200, 150, 0);
+    glm::vec3 cameraTranslation(0.0f, 0.0f, 0.0f);
+    glm::vec3 objectFooTranslation(100.0f, 50.0f, 0.0f);
+    glm::vec3 objectBarTranslation(200.0f, 150.0f, 0.0f);
 
     while (renderer.isRunning())
     {
         renderer.clear();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         { // Object Foo
             shader.bind();
@@ -76,7 +93,23 @@ int main(void)
 
             renderer.draw(vertexArray, indexBuffer);
         }
+
+        {
+            ImGui::Begin("Objects");
+            ImGui::InputFloat2("foo position", &objectFooTranslation.x, "%g", 0);
+            ImGui::InputFloat2("bar position", &objectBarTranslation.x, "%g", 0);
+            ImGui::End();
+        }
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        renderer.update();
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     glfwTerminate();
     return 0;
