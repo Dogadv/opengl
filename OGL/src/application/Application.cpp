@@ -96,8 +96,9 @@ int main(void)
 
         {
             ImGui::Begin("Objects");
-            ImGui::InputFloat2("foo position", &objectFooTranslation.x, "%g", 0);
-            ImGui::InputFloat2("bar position", &objectBarTranslation.x, "%g", 0);
+            ImGui::InputFloat2("red position", &objectFooTranslation.x, "%g", 0);
+            ImGui::NewLine();
+            ImGui::InputFloat2("blue position", &objectBarTranslation.x, "%g", 0);
             ImGui::End();
         }
 
