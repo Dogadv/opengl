@@ -37,6 +37,7 @@ Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_
 
     /* Make the window's context current */
     glfwMakeContextCurrent(m_window);
+    glfwSwapInterval(1);
 
     /* Initialize GLEW */
     glewInit();
@@ -60,13 +61,16 @@ bool Renderer::isRunning() const
 
 void Renderer::clear() const
 {
+	glClear(GL_COLOR_BUFFER_BIT); 
+}
+
+void Renderer::update() const
+{
     /* Swap front and back buffers */
     glfwSwapBuffers(m_window);
 
     /* Poll for and process events */
     glfwPollEvents();
-
-	glClear(GL_COLOR_BUFFER_BIT); 
 }
 
 void Renderer::draw(

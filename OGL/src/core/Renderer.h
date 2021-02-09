@@ -18,10 +18,13 @@ public:
 
 	bool isRunning() const;
 	void clear() const;
+	void update() const;
 	void draw(
 		const VertexArray& vertexArray,
 		const IndexBuffer& indexBuffer
 	) const;
+
+	inline GLFWwindow* getWindow() const { return m_window; }
 
 	inline glm::mat4 getMVPMatrix(const glm::vec3 modelTranslation, const glm::vec3 viewTranslation) const {
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), viewTranslation);
