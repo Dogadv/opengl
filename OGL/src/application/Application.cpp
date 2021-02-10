@@ -16,8 +16,8 @@ const char* glsl_version = "#version 130";
 
 int main(void)
 {
-    const uint32_t width = 1280;
-    const uint32_t height = 720;
+    const uint32_t width = 640;
+    const uint32_t height = 360;
 
     Renderer renderer("Hello, OpenGL!", width, height);
     GLFWwindow* window = renderer.getWindow();
@@ -31,11 +31,18 @@ int main(void)
     const uint32_t TRIANGLE_VERTEX_COUNT = 4;
     const uint32_t GEOMETRY_VERTEX_COMPONENT_COUNT = 2;
     const uint32_t TEXTURE_VERTEX_COMPONENT_COUNT = 2;
-    float positions[TRIANGLE_VERTEX_COUNT * (GEOMETRY_VERTEX_COMPONENT_COUNT + TEXTURE_VERTEX_COMPONENT_COUNT)] = {
-        -100.0f, -100.0f,  .0f , .0f,
-         100.0f, -100.0f, 1.0f,  .0f,
-         100.0f,  100.0f, 1.0f, 1.0f,
-        -100.0f,  100.0f,  .0f, 1.0f
+    const uint32_t COLOR_VERTEX_COMPONENT_COUNT = 4;
+    float positions[2 /* 2 objects */ * TRIANGLE_VERTEX_COUNT * (GEOMETRY_VERTEX_COMPONENT_COUNT + TEXTURE_VERTEX_COMPONENT_COUNT + COLOR_VERTEX_COMPONENT_COUNT)] = {
+        /*  geometry  */     /* texture */    /*        color      */
+        -100.0f, -100.0f,      .0f , .0f,      0.0f, 1.0f, 0.0f, 1.0f,
+         100.0f, -100.0f,     1.0f,  .0f,      0.0f, 1.0f, 0.0f, 1.0f,
+         100.0f,  100.0f,     1.0f, 1.0f,      0.0f, 1.0f, 0.0f, 1.0f,
+        -100.0f,  100.0f,      .0f, 1.0f,      0.0f, 1.0f, 0.0f, 1.0f,
+         
+         100.0f,  100.0f,      .0f , .0f,      1.0f, 0.0f, 0.0f, 1.0f,
+         300.0f,  100.0f,     1.0f,  .0f,      1.0f, 0.0f, 0.0f, 1.0f,
+         300.0f,  300.0f,     1.0f, 1.0f,      1.0f, 0.0f, 0.0f, 1.0f,
+         100.0f,  300.0f,      .0f, 1.0f,      1.0f, 0.0f, 0.0f, 1.0f,
     };
 
     const uint32_t VBO_SIZE = sizeof(positions);
@@ -46,13 +53,14 @@ int main(void)
 
     vertexBufferLayout.push<GLfloat>(GEOMETRY_VERTEX_COMPONENT_COUNT);
     vertexBufferLayout.push<GLfloat>(TEXTURE_VERTEX_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLfloat>(COLOR_VERTEX_COMPONENT_COUNT);
 
     vertexArray.addBuffer(vertexBuffer, vertexBufferLayout);
 
-    const uint32_t INDECIES_COUNT = 6;
+    const uint32_t INDECIES_COUNT = 6 * 2;
     uint32_t indecies[INDECIES_COUNT] = {
-       0, 1, 2,
-       2, 3, 0
+       0, 1, 2, 2, 3, 0,
+       4, 5, 6, 6, 7, 4
     };
 
     const uint32_t IBO_SIZE = sizeof(indecies);
@@ -68,42 +76,28 @@ int main(void)
 
     glm::vec3 cameraTranslation(0.0f, 0.0f, 0.0f);
     glm::vec3 objectFooTranslation(100.0f, 50.0f, 0.0f);
-    glm::vec3 objectBarTranslation(200.0f, 150.0f, 0.0f);
 
     while (renderer.isRunning())
     {
         renderer.clear();
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        //ImGui_ImplOpenGL3_NewFrame();
+        //ImGui_ImplGlfw_NewFrame();
+        //ImGui::NewFrame();
 
-        { // Object Foo
-            shader.bind();
-            shader.setUniform4f("u_color", 1.0f, 0.0f, 0.0f, 1.0f);
-            shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(objectFooTranslation, cameraTranslation));
+        shader.bind();
+        shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(objectFooTranslation, cameraTranslation));
 
-            renderer.draw(vertexArray, indexBuffer);
-        }
+        renderer.draw(vertexArray, indexBuffer);
         
-        { // Object Bar
-            shader.bind();
-            shader.setUniform4f("u_color", 0.0f, 0.0f, 1.0f, 1.0f);
-            shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(objectBarTranslation, cameraTranslation));
+        //{
+        //    ImGui::Begin("Objects");
+        //    ImGui::InputFloat2("red position", &objectFooTranslation.x, "%g", 0);
+        //    ImGui::End();
+        //}
 
-            renderer.draw(vertexArray, indexBuffer);
-        }
-
-        {
-            ImGui::Begin("Objects");
-            ImGui::InputFloat2("red position", &objectFooTranslation.x, "%g", 0);
-            ImGui::NewLine();
-            ImGui::InputFloat2("blue position", &objectBarTranslation.x, "%g", 0);
-            ImGui::End();
-        }
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        //ImGui::Render();
+        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         renderer.update();
     }
