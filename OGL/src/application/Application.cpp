@@ -75,29 +75,32 @@ int main(void)
     shader.setUniform1i("u_texture", 0);
 
     glm::vec3 cameraTranslation(0.0f, 0.0f, 0.0f);
-    glm::vec3 objectFooTranslation(100.0f, 50.0f, 0.0f);
+    glm::vec3 modelTranslation(100.0f, 50.0f, 0.0f);
+
+    float zoom = 1.0f;
 
     while (renderer.isRunning())
     {
         renderer.clear();
 
-        //ImGui_ImplOpenGL3_NewFrame();
-        //ImGui_ImplGlfw_NewFrame();
-        //ImGui::NewFrame();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         shader.bind();
-        shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(objectFooTranslation, cameraTranslation));
+        shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(cameraTranslation, cameraTranslation, zoom));
 
         renderer.draw(vertexArray, indexBuffer);
         
-        //{
-        //    ImGui::Begin("Objects");
-        //    ImGui::InputFloat2("red position", &objectFooTranslation.x, "%g", 0);
-        //    ImGui::End();
-        //}
+        {
+            ImGui::Begin("params");
+            ImGui::SliderFloat2("camera position", &cameraTranslation.x, 0, (float)width, "%g", 0);
+            ImGui::SliderFloat("camera zoom", &zoom, .25f, 2.5f, "%g", 0);
+            ImGui::End();
+        }
 
-        //ImGui::Render();
-        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         renderer.update();
     }
