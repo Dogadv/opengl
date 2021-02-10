@@ -26,9 +26,10 @@ public:
 
 	inline GLFWwindow* getWindow() const { return m_window; }
 
-	inline glm::mat4 getMVPMatrix(const glm::vec3 modelTranslation, const glm::vec3 viewTranslation) const {
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), viewTranslation);
+	inline glm::mat4 getMVPMatrix(const glm::vec3 modelTranslation, const glm::vec3 viewTranslation, const float zoom) const {
+		glm::mat4 view = glm::scale(glm::translate(glm::mat4(1.0f), viewTranslation), glm::vec3(zoom, zoom, 1));
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), modelTranslation);
+		
 
 		return projection * view * model; 
 	}
