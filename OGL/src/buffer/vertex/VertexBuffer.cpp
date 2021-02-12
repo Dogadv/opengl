@@ -2,11 +2,11 @@
 
 #include <GL/glew.h>
 
-VertexBuffer::VertexBuffer(const void* data, uint32_t size)
+VertexBuffer::VertexBuffer(GLuint size)
 {
 	glGenBuffers(1, &m_rendererId);
 	glBindBuffer(GL_ARRAY_BUFFER, m_rendererId);
-	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
 VertexBuffer::~VertexBuffer()
@@ -14,9 +14,10 @@ VertexBuffer::~VertexBuffer()
 	glDeleteBuffers(1, &m_rendererId);
 }
 
-void VertexBuffer::bind() const
+void VertexBuffer::bind(Vertex* verticies, GLuint size) const
 {
-		glBindBuffer(GL_ARRAY_BUFFER, m_rendererId);
+	glBindBuffer(GL_ARRAY_BUFFER, m_rendererId);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, verticies);
 }
 
 void VertexBuffer::unbind() const
