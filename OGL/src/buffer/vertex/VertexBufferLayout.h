@@ -30,7 +30,16 @@ public:
 	{
 		uint8_t size = sizeof(GLfloat);
 
-		m_entries.push_back({ GL_FLOAT, count, size,  GL_FALSE });
+		m_entries.push_back({ GL_FLOAT, count, size, GL_FALSE });
+		m_stride += count * size;
+	}
+
+	template<>
+	void push<GLuint>(uint32_t count)
+	{
+		uint8_t size = sizeof(GLuint);
+
+		m_entries.push_back({ GL_UNSIGNED_INT, count, size, GL_FALSE });
 		m_stride += count * size;
 	}
 
