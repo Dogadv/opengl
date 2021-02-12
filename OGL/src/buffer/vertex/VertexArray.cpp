@@ -2,7 +2,7 @@
 
 VertexArray::VertexArray()
 {
-	glGenVertexArrays(1, &m_rendererId);
+	glCreateVertexArrays(1, &m_rendererId);
 }
 
 VertexArray::~VertexArray()
@@ -23,7 +23,7 @@ void VertexArray::unbind() const
 void VertexArray::addBuffer(VertexBuffer& vertexBuffer, VertexBufferLayout& vertexBufferLayout)
 {
 	bind();
-	vertexBuffer.bind();
+	//vertexBuffer.bind();
 
 	const auto& entries = vertexBufferLayout.getEntries();
 	uint32_t offset = 0;
@@ -32,7 +32,7 @@ void VertexArray::addBuffer(VertexBuffer& vertexBuffer, VertexBufferLayout& vert
 	{
 		const auto& entry = entries[i];
 
-		glEnableVertexAttribArray(i);
+		glEnableVertexArrayAttrib(vertexBuffer.getRendererId(), i);
 		glVertexAttribPointer(i, entry.count, entry.type, entry.normalized, vertexBufferLayout.getStride(), (const void*) offset);
 	
 		offset += entry.count * entry.size;

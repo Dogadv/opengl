@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string>
 
+#include "../entity/Vertex.h"
+
 #include "../buffer/vertex/VertexBuffer.h"
 #include "../buffer/vertex/VertexArray.h"
 #include "../buffer/index/IndexBuffer.h"
+
 #include "../texture/Texture.h"
 #include "../shader/Shader.h"
 #include "../core/Renderer.h"
@@ -28,44 +31,36 @@ int main(void)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-    const uint32_t TRIANGLE_VERTEX_COUNT = 4;
-    const uint32_t GEOMETRY_VERTEX_COMPONENT_COUNT = 2;
-    const uint32_t TEXTURE_VERTEX_COMPONENT_COUNT = 2;
-    const uint32_t COLOR_VERTEX_COMPONENT_COUNT = 4;
-    const uint32_t TEXTURE_SLOT_VERTEX_COMPONENT_COUNT = 1;
-    float positions[2 /* 2 objects */ * TRIANGLE_VERTEX_COUNT * (GEOMETRY_VERTEX_COMPONENT_COUNT + TEXTURE_VERTEX_COMPONENT_COUNT + COLOR_VERTEX_COMPONENT_COUNT + TEXTURE_SLOT_VERTEX_COMPONENT_COUNT)] = {
-        /*  geometry  */  /* texture coord */  /*        color      */ /* texture id */
-        -100.0f, -100.0f,      .0f , .0f,      0.0f, 1.0f, 0.0f, 1.0f,    0.0f,
-         100.0f, -100.0f,     1.0f,  .0f,      0.0f, 1.0f, 0.0f, 1.0f,    0.0f,
-         100.0f,  100.0f,     1.0f, 1.0f,      0.0f, 1.0f, 0.0f, 1.0f,    0.0f,
-        -100.0f,  100.0f,      .0f, 1.0f,      0.0f, 1.0f, 0.0f, 1.0f,    0.0f,
-                                                                          
-         100.0f,  100.0f,      .0f , .0f,      1.0f, 0.0f, 0.0f, 1.0f,    1.0f,
-         300.0f,  100.0f,     1.0f,  .0f,      1.0f, 0.0f, 0.0f, 1.0f,    1.0f,
-         300.0f,  300.0f,     1.0f, 1.0f,      1.0f, 0.0f, 0.0f, 1.0f,    1.0f,
-         100.0f,  300.0f,      .0f, 1.0f,      1.0f, 0.0f, 0.0f, 1.0f,    1.0f,
+    Vertex verticies[2 * 4] = {
+        {{-100.0f, -100.0f},  {0.0f, 1.0f, 0.0f, 1.0f},   {0.0f ,0.0f},    0},
+        {{ 100.0f, -100.0f},  {0.0f, 1.0f, 0.0f, 1.0f},   {0.0f, 0.0f},    0},
+        {{ 100.0f,  100.0f},  {0.0f, 1.0f, 0.0f, 1.0f},   {0.0f, 1.0f},    0},
+        {{-100.0f,  100.0f},  {0.0f, 1.0f, 0.0f, 1.0f},   {0.0f, 1.0f},    0},
+
+        {{ 100.0f,  100.0f},  {1.0f, 0.0f, 0.0f, 1.0f},   {0.0f ,0.0f},    1},
+        {{ 300.0f,  100.0f},  {1.0f, 0.0f, 0.0f, 1.0f},   {0.0f, 0.0f},    1},
+        {{ 300.0f,  300.0f},  {1.0f, 0.0f, 0.0f, 1.0f},   {0.0f, 1.0f},    1},
+        {{ 100.0f,  300.0f},  {1.0f, 0.0f, 0.0f, 1.0f},   {0.0f, 1.0f},    1},
     };
 
-    const uint32_t VBO_SIZE = sizeof(positions);
-
     VertexArray vertexArray;
-    VertexBuffer vertexBuffer(positions, VBO_SIZE);
+    VertexBuffer vertexBuffer(sizeof(verticies));
     VertexBufferLayout vertexBufferLayout;
 
-    vertexBufferLayout.push<GLfloat>(GEOMETRY_VERTEX_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLfloat>(TEXTURE_VERTEX_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLfloat>(COLOR_VERTEX_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLfloat>(TEXTURE_SLOT_VERTEX_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLfloat>(VERTEX_POSITION_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLfloat>(VERTEX_COLOR_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLfloat>(VERTEX_TEXTURE_COORD_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLuint>(VERTEX_TEXTURE_INDEX_COMPONENT_COUNT);
 
     vertexArray.addBuffer(vertexBuffer, vertexBufferLayout);
 
-    const uint32_t INDECIES_COUNT = 6 * 2;
-    uint32_t indecies[INDECIES_COUNT] = {
+    const GLuint INDECIES_COUNT = 6 * 2;
+    GLuint indecies[INDECIES_COUNT] = {
        0,  1,  2,  2,  3,  0,
        4,  5,  6,  6,  7,  4
     };
 
-    const uint32_t IBO_SIZE = sizeof(indecies);
+    const GLuint IBO_SIZE = sizeof(indecies);
     IndexBuffer indexBuffer(indecies, INDECIES_COUNT);
 
     Shader shader("res/shaders/Basic.shader");
@@ -87,10 +82,11 @@ int main(void)
     glm::vec3 cameraTranslation(500.0f, 250.0f, 0.0);
     glm::vec3 modelTranslation(0.0f, 0.0f, 0.0f);
 
-    float zoom = 1.0f;
+    GLfloat zoom = 1.0f;
 
     while (renderer.isRunning())
     {
+        vertexBuffer.bind(verticies, sizeof(verticies));
         renderer.clear();
 
         ImGui_ImplOpenGL3_NewFrame();
@@ -115,9 +111,9 @@ int main(void)
         renderer.update();
     }
 
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    //ImGui_ImplOpenGL3_Shutdown();
+    //ImGui_ImplGlfw_Shutdown();
+    //ImGui::DestroyContext();
 
     glfwTerminate();
     return 0;

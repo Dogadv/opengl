@@ -1370,9 +1370,15 @@
     <ClInclude Include="src\vendor\imgui\imgui_impl_opengl3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\entity\Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\texture.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\cobblestone.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

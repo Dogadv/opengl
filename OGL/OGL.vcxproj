@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -308,6 +308,7 @@
     <ClInclude Include="src\buffer\vertex\VertexBuffer.h" />
     <ClInclude Include="src\buffer\vertex\VertexBufferLayout.h" />
     <ClInclude Include="src\core\Renderer.h" />
+    <ClInclude Include="src\entity\Vertex.h" />
     <ClInclude Include="src\shader\Shader.h" />
     <ClInclude Include="src\texture\Texture.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
@@ -602,6 +603,7 @@
     <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\cobblestone.png" />
     <Image Include="res\textures\texture.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
