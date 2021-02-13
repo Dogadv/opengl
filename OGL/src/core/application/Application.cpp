@@ -10,7 +10,7 @@
 
 #include "../texture/Texture.h"
 #include "../shader/Shader.h"
-#include "../core/Renderer.h"
+#include "../renderer/Renderer.h"
 
 #include "../vendor/imgui/imgui.h"
 #include "../vendor/imgui/imgui_impl_glfw.h"
