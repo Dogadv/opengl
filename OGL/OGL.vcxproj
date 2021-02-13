@@ -145,13 +145,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\application\Application.cpp" />
-    <ClCompile Include="src\buffer\index\IndexBuffer.cpp" />
-    <ClCompile Include="src\buffer\vertex\VertexArray.cpp" />
-    <ClCompile Include="src\buffer\vertex\VertexBuffer.cpp" />
-    <ClCompile Include="src\core\Renderer.cpp" />
-    <ClCompile Include="src\shader\Shader.cpp" />
-    <ClCompile Include="src\texture\Texture.cpp" />
+    <ClCompile Include="src\core\application\Application.cpp" />
+    <ClCompile Include="src\core\buffer\index\IndexBuffer.cpp" />
+    <ClCompile Include="src\core\buffer\vertex\VertexArray.cpp" />
+    <ClCompile Include="src\core\buffer\vertex\VertexBuffer.cpp" />
+    <ClCompile Include="src\core\renderer\Renderer.cpp" />
+    <ClCompile Include="src\core\shader\Shader.cpp" />
+    <ClCompile Include="src\core\texture\Texture.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
@@ -303,14 +303,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\application\Window.h" />
-    <ClInclude Include="src\buffer\index\IndexBuffer.h" />
-    <ClInclude Include="src\buffer\vertex\VertexArray.h" />
-    <ClInclude Include="src\buffer\vertex\VertexBuffer.h" />
-    <ClInclude Include="src\buffer\vertex\VertexBufferLayout.h" />
-    <ClInclude Include="src\core\Renderer.h" />
-    <ClInclude Include="src\entity\Vertex.h" />
-    <ClInclude Include="src\shader\Shader.h" />
-    <ClInclude Include="src\texture\Texture.h" />
+    <ClInclude Include="src\core\buffer\index\IndexBuffer.h" />
+    <ClInclude Include="src\core\buffer\vertex\VertexArray.h" />
+    <ClInclude Include="src\core\buffer\vertex\VertexBuffer.h" />
+    <ClInclude Include="src\core\buffer\vertex\VertexBufferLayout.h" />
+    <ClInclude Include="src\core\renderer\Renderer.h" />
+    <ClInclude Include="src\core\shader\Shader.h" />
+    <ClInclude Include="src\core\texture\Texture.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_vector_relational.hpp" />
