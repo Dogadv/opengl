@@ -50,7 +50,50 @@ Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glfwSetWindowUserPointer(m_window, this);
+    glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
+            Renderer& renderer = *(Renderer*) glfwGetWindowUserPointer(window);
+
+            // TODO: temporary solution
+            float cameraTranslationDelta = 10.0f;
+
+            switch (action)
+            {
+            case GLFW_PRESS:
+            case GLFW_REPEAT:
+            {
+                switch (key)
+                {
+                    case GLFW_KEY_W:
+                        renderer.translateCamera(glm::vec3(0, cameraTranslationDelta, 0));
+                        break;
+                    case GLFW_KEY_A:
+                        renderer.translateCamera(glm::vec3(-cameraTranslationDelta, 0, 0));
+                        break;
+                    case GLFW_KEY_S:
+                        renderer.translateCamera(glm::vec3(0, -cameraTranslationDelta, 0));
+                        break;
+                    case GLFW_KEY_D:
+                        renderer.translateCamera(glm::vec3(cameraTranslationDelta, 0, 0));
+                        break;
+                }
+                break;
+            }
+            }
+        });
+
     projection = glm::ortho(.0f, (float) width, .0f, (float) height);
+}
+
+void Renderer::translateCamera(glm::vec3 cameratranslation)
+{
+    cameraPosition += cameratranslation;
+}
+
+void Renderer::setKeyCallback(GLFWkeyfun callback) const
+{
+    // TODO: improve key callbacks
 }
 
 /* Loop until the user closes the window */

@@ -19,17 +19,20 @@ public:
 	bool isRunning() const;
 	void clear() const;
 	void update() const;
+
 	void draw(
 		const VertexArray& vertexArray,
 		const IndexBuffer& indexBuffer
 	) const;
 
+	void setKeyCallback(GLFWkeyfun callback) const;
+	void translateCamera(glm::vec3 cameratranslation);
+
 	inline GLFWwindow* getWindow() const { return m_window; }
 
-	inline glm::mat4 getMVPMatrix(const glm::vec3 modelTranslation, const glm::vec3 viewTranslation, const float zoom) const {
-		glm::mat4 view = glm::scale(glm::translate(glm::mat4(1.0f), viewTranslation), glm::vec3(zoom, zoom, 1));
+	inline glm::mat4 getMVPMatrix(const glm::vec3 modelTranslation, const float zoom) const {
+		glm::mat4 view = glm::scale(glm::translate(glm::mat4(1.0f), cameraPosition), glm::vec3(zoom, zoom, 1));
 		glm::mat4 model = glm::translate(glm::mat4(1.0f), modelTranslation);
-		
 
 		return projection * view * model; 
 	}
@@ -37,4 +40,5 @@ public:
 private:
 	GLFWwindow* m_window;
 	glm::mat4 projection;
+	glm::vec3 cameraPosition;
 };
