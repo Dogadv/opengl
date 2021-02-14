@@ -112,7 +112,7 @@ int main(void)
         shader.bind();
         oglTexture.bind();
         cobblestoneTexture.bind();
-        shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(modelTranslation, cameraTranslation, zoom));
+        shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(modelTranslation, zoom));
 
         renderer.draw(vertexArray, indexBuffer);
         
