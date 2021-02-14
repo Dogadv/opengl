@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../entity/Vertex.h"
+#include "../../../entity/Vertex.h"
 
 #include <cstdint>
 
