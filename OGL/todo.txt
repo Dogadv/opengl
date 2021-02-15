@@ -1,0 +1,7 @@
+- TODO:
+	* Abstract and imporove inputs;
+	* Abstract window creating;
+	* Abstract Camera controls;
+
+# 15.02.2021
+	* Camera abstraction;
