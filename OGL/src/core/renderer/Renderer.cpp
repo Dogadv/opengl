@@ -18,7 +18,8 @@ void GLAPIENTRY onGLError(GLenum source,
     //__debugbreak();
 }
 
-Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_t height)
+Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_t height, Camera& camera)
+    : m_camera(camera)
 {
     /* Initialize the library */
     if (!glfwInit()) __debugbreak();
@@ -51,6 +52,11 @@ Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glfwSetWindowUserPointer(m_window, this);
+
+    /* 
+     * TODO: Abstract and improve inputs!
+     *       - Platform indepentent inputs;
+     */
     glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
         {
             Renderer& renderer = *(Renderer*) glfwGetWindowUserPointer(window);
@@ -82,13 +88,11 @@ Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_
             }
             }
         });
-
-    projection = glm::ortho(.0f, (float) width, .0f, (float) height);
 }
 
 void Renderer::translateCamera(glm::vec3 cameratranslation)
 {
-    cameraPosition += cameratranslation;
+   m_camera.moveBy(cameratranslation);
 }
 
 void Renderer::setKeyCallback(GLFWkeyfun callback) const

@@ -11,6 +11,7 @@
 #include "../texture/Texture.h"
 #include "../shader/Shader.h"
 #include "../renderer/Renderer.h"
+#include "../camera/Camera.h"
 
 #include "../vendor/imgui/imgui.h"
 #include "../vendor/imgui/imgui_impl_glfw.h"
@@ -35,7 +36,9 @@ int main(void)
     const uint32_t width = 1280;
     const uint32_t height = 720;
 
-    Renderer renderer("Hello, OpenGL!", width, height);
+    Camera orthoCamera(CameraProjection::Orthographic, width, height);
+
+    Renderer renderer("Hello, OpenGL!", width, height, orthoCamera);
     GLFWwindow* window = renderer.getWindow();
 
     ImGui::CreateContext();
