@@ -149,6 +149,7 @@
     <ClCompile Include="src\core\buffer\index\IndexBuffer.cpp" />
     <ClCompile Include="src\core\buffer\vertex\VertexArray.cpp" />
     <ClCompile Include="src\core\buffer\vertex\VertexBuffer.cpp" />
+    <ClCompile Include="src\core\camera\Camera.cpp" />
     <ClCompile Include="src\core\renderer\Renderer.cpp" />
     <ClCompile Include="src\core\shader\Shader.cpp" />
     <ClCompile Include="src\core\texture\Texture.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="src\core\buffer\vertex\VertexArray.h" />
     <ClInclude Include="src\core\buffer\vertex\VertexBuffer.h" />
     <ClInclude Include="src\core\buffer\vertex\VertexBufferLayout.h" />
+    <ClInclude Include="src\core\camera\Camera.h" />
     <ClInclude Include="src\core\renderer\Renderer.h" />
     <ClInclude Include="src\core\shader\Shader.h" />
     <ClInclude Include="src\core\texture\Texture.h" />
@@ -604,6 +606,9 @@
   <ItemGroup>
     <Image Include="res\textures\cobblestone.png" />
     <Image Include="res\textures\texture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
