@@ -12,7 +12,7 @@ add_definitions(-DGLEW_STATIC)
 message("Including GLEW")
 include_directories(libs/glew-2.1.0/include)
 
-set(STB_INCLUDE_PATH PATH libs/stb-image)
+set(STB_INCLUDE_PATH PATH src/vendor/stb)
 
 set(LIBS_INCLUDE_PATH
         ${STB_INCLUDE_PATH}
@@ -76,8 +76,8 @@ add_executable(OGL
         )
 
 
-add_subdirectory(libs/glfw-3.3.2)
-add_subdirectory(libs/glew-2.1.0)
+add_subdirectory(libs/glfw)
+add_subdirectory(libs/glew)
 add_subdirectory(libs/glm)
 
 target_link_libraries(OGL glfw libglew_static glm opengl32)
