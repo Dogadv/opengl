@@ -4,7 +4,7 @@
 * text=auto
 
 libs/* linguist-vendored
-OGL/src/vendor/* linguist-vendored
+src/vendor/* linguist-vendored
 
 *.txt linguist-detectable=false
 
