@@ -2,8 +2,6 @@
 #include <string>
 #include <array>
 
-#include "../entity/Vertex.h"
-
 #include "../buffer/vertex/VertexBuffer.h"
 #include "../buffer/vertex/VertexArray.h"
 #include "../buffer/index/IndexBuffer.h"
@@ -13,9 +11,11 @@
 #include "../renderer/Renderer.h"
 #include "../camera/Camera.h"
 
-#include "../vendor/imgui/imgui.h"
-#include "../vendor/imgui/imgui_impl_glfw.h"
-#include "../vendor/imgui/imgui_impl_opengl3.h"
+#include "../entity/Vertex.h"
+
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 const char* glsl_version = "#version 130";
 
@@ -69,9 +69,9 @@ int main(void)
     const GLuint IBO_SIZE = sizeof(indecies);
     IndexBuffer indexBuffer(indecies, INDECIES_COUNT);
 
-    Shader shader("res/shaders/Basic.shader");
-    Texture oglTexture("res/textures/texture.png", 0);
-    Texture cobblestoneTexture("res/textures/cobblestone.png", 1);
+    Shader shader("shaders/Basic.shader");
+    Texture oglTexture("textures/texture.png", 0);
+    Texture cobblestoneTexture("textures/cobblestone.png", 1);
 
     shader.bind();
     oglTexture.bind();
