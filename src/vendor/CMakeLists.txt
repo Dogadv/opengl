@@ -1,0 +1,21 @@
+set(VENDOR_INCLUDE_PATH
+        src/vendor/stb
+        src/vendor/imgui)
+
+set(VENDOR_SOURCE_FILES
+        src/vendor/stb/stb_image.cpp
+        src/vendor/imgui/imconfig.h
+        src/vendor/imgui/imgui.cpp
+        src/vendor/imgui/imgui.h
+        src/vendor/imgui/imgui_demo.cpp
+        src/vendor/imgui/imgui_draw.cpp
+        src/vendor/imgui/imgui_impl_glfw.cpp
+        src/vendor/imgui/imgui_impl_glfw.h
+        src/vendor/imgui/imgui_impl_opengl3.cpp
+        src/vendor/imgui/imgui_impl_opengl3.h
+        src/vendor/imgui/imgui_internal.h
+        src/vendor/imgui/imgui_tables.cpp
+        src/vendor/imgui/imgui_widgets.cpp
+        src/vendor/imgui/imstb_rectpack.h
+        src/vendor/imgui/imstb_textedit.h
+        src/vendor/imgui/imstb_truetype.h)

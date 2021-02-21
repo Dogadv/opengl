@@ -31,7 +31,7 @@ static std::array<Vertex, 4> buildQuad(const glm::vec2& position, const GLuint t
     return { v0, v1, v2, v3 };
 }
 
-int main(void)
+int main()
 {
     const uint32_t width = 1280;
     const uint32_t height = 720;
