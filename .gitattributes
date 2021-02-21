@@ -2,8 +2,11 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
+
 libs/* linguist-vendored
 OGL/src/vendor/* linguist-vendored
+
+*.txt linguist-detectable=false
 
 ###############################################################################
 # Set default behavior for command prompt diff.
