@@ -7,21 +7,22 @@
 #include "../buffer/vertex/VertexArray.h"
 #include "../buffer/index/IndexBuffer.h"
 
-#include "../application/Window.h"
+#include "Window.h"
 
 #include "../camera/OrthographicCamera.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-class Renderer
+class Application
 {
 public:
-    Renderer(const std::string &title, uint32_t width, uint32_t height, OrthographicCamera &camera);
+    Application(const std::string &title, uint32_t width, uint32_t height, OrthographicCamera &camera);
 
     [[nodiscard]] bool isRunning() const;
     void clear() const;
     void update() const;
+    void shutdown() const;
 
     void draw(
             const VertexArray &vertexArray,

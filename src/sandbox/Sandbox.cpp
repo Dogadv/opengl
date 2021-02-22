@@ -1,0 +1,100 @@
+#include <iostream>
+#include <array>
+
+#include "../core/buffer/vertex/VertexBuffer.h"
+#include "../core/buffer/vertex/VertexArray.h"
+#include "../core/buffer/index/IndexBuffer.h"
+
+#include "../core/texture/Texture.h"
+#include "../core/shader/Shader.h"
+#include "../core/application/Application.h"
+
+static std::array<Vertex, 4> buildQuad(const glm::vec2 &position, const GLuint textureIndex)
+{
+    GLfloat size = 100.0f;
+
+    Vertex v0 = {{position.x, position.y}, {0.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, textureIndex};
+    Vertex v1 = {{position.x + size, position.y}, {0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 0.0f}, textureIndex};
+    Vertex v2 = {{position.x + size, position.y + size}, {0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f}, textureIndex};
+    Vertex v3 = {{position.x, position.y + size}, {0.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 1.0f}, textureIndex};
+
+    return {v0, v1, v2, v3};
+}
+
+int main()
+{
+    const uint32_t width = 1280;
+    const uint32_t height = 720;
+
+    OrthographicCamera orthoCamera(width, height);
+    Application application("Hello, OpenGL!", width, height, orthoCamera);
+
+    VertexArray vertexArray;
+    VertexBuffer vertexBuffer(sizeof(Vertex) * 8);
+    VertexBufferLayout vertexBufferLayout;
+
+    vertexBufferLayout.push<GLfloat>(VERTEX_POSITION_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLfloat>(VERTEX_COLOR_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLfloat>(VERTEX_TEXTURE_COORD_COMPONENT_COUNT);
+    vertexBufferLayout.push<GLuint>(VERTEX_TEXTURE_INDEX_COMPONENT_COUNT);
+
+    vertexArray.addBuffer(vertexBuffer, vertexBufferLayout);
+
+    const GLuint INDICES_COUNT = 6 * 2;
+    GLuint indices[INDICES_COUNT] = {
+            0, 1, 2, 2, 3, 0,
+            4, 5, 6, 6, 7, 4
+    };
+
+    IndexBuffer indexBuffer(indices, INDICES_COUNT);
+
+    Shader shader("shaders/Basic.shader");
+    Texture oglTexture("textures/texture.png", 0);
+    Texture cobblestoneTexture("textures/cobblestone.png", 1);
+
+    shader.bind();
+    oglTexture.bind();
+    cobblestoneTexture.bind();
+
+    GLint samplers[2] =
+            {
+                    oglTexture.getSlotIndex(),
+                    cobblestoneTexture.getSlotIndex()
+            };
+
+    shader.setUniform1iv("u_textures", samplers);
+
+    glm::vec3 cameraTranslation(500.0f, 250.0f, 0.0);
+    glm::vec3 modelTranslation(0.0f, 0.0f, 0.0f);
+
+    glm::vec2 q0Translation(0.0f, 0.0f);
+    glm::vec2 q1Translation(100.0f, 100.0f);
+
+    GLfloat zoom = 1.0f;
+
+    while (application.isRunning())
+    {
+        auto q0 = buildQuad(q0Translation, 0);
+        auto q1 = buildQuad(q1Translation, 1);
+
+        Vertex vertices[8];
+
+        memcpy(vertices, q0.data(), q0.size() * sizeof(Vertex));
+        memcpy(vertices + q0.size(), q1.data(), q1.size() * sizeof(Vertex));
+
+        vertexBuffer.bind(vertices, sizeof(vertices));
+
+        application.clear();
+
+        shader.bind();
+        oglTexture.bind();
+        cobblestoneTexture.bind();
+        shader.setUniformMat4f("u_mvp", application.getMVPMatrix(modelTranslation, zoom));
+
+        application.draw(vertexArray, indexBuffer);
+        application.update();
+    }
+
+    application.shutdown();
+    return 0;
+}

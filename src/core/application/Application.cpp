@@ -1,135 +1,90 @@
-#include <iostream>
-#include <array>
+#include "Application.h"
 
-#include "../buffer/vertex/VertexBuffer.h"
-#include "../buffer/vertex/VertexArray.h"
-#include "../buffer/index/IndexBuffer.h"
+#include<string>
 
-#include "../texture/Texture.h"
-#include "../shader/Shader.h"
-#include "../renderer/Renderer.h"
-
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
-const char* glsl_version = "#version 130";
-
-static std::array<Vertex, 4> buildQuad(const glm::vec2& position, const GLuint textureIndex)
+Application::Application(const std::string &title, uint32_t width, uint32_t height, OrthographicCamera &camera)
+        : m_camera(camera)
 {
-    GLfloat size = 100.0f;
+    m_window = Window::create(title, width, height);
 
-    Vertex v0 = { { position.x,        position.y        }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 0.0f ,0.0f }, textureIndex };
-    Vertex v1 = { { position.x + size, position.y        }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 0.0f }, textureIndex };
-    Vertex v2 = { { position.x + size, position.y + size }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 1.0f, 1.0f }, textureIndex };
-    Vertex v3 = { { position.x,        position.y + size }, { 0.0f, 1.0f, 0.0f, 1.0f }, { 0.0f, 1.0f }, textureIndex };
+    /* 
+     * TODO: Abstract and improve inputs!
+     *       - Platform indepentent inputs;
+     */
 
-    return { v0, v1, v2, v3 };
+    glfwSetWindowUserPointer(m_window->getNativeWindow(), this);
+    glfwSetKeyCallback(m_window->getNativeWindow(), [](GLFWwindow *window, int key, int scancode, int action, int mods)
+    {
+        Application &renderer = *(Application *) glfwGetWindowUserPointer(window);
+
+        // TODO: temporary solution
+        float cameraTranslationDelta = 10.0f;
+
+        switch (action)
+        {
+            case GLFW_PRESS:
+            case GLFW_REPEAT:
+            {
+                switch (key)
+                {
+                    case GLFW_KEY_W:
+                        renderer.translateCamera(glm::vec3(0, cameraTranslationDelta, 0));
+                        break;
+                    case GLFW_KEY_A:
+                        renderer.translateCamera(glm::vec3(-cameraTranslationDelta, 0, 0));
+                        break;
+                    case GLFW_KEY_S:
+                        renderer.translateCamera(glm::vec3(0, -cameraTranslationDelta, 0));
+                        break;
+                    case GLFW_KEY_D:
+                        renderer.translateCamera(glm::vec3(cameraTranslationDelta, 0, 0));
+                        break;
+                }
+                break;
+            }
+        }
+    });
 }
 
-int main()
+void Application::translateCamera(glm::vec3 cameraTranslation)
 {
-    const uint32_t width = 1280;
-    const uint32_t height = 720;
+    m_camera.moveBy(cameraTranslation);
+}
 
-    OrthographicCamera orthoCamera(width, height);
+void Application::setKeyCallback(GLFWkeyfun callback) const
+{
+    // TODO: improve key callbacks
+}
 
-    Renderer renderer("Hello, OpenGL!", width, height, orthoCamera);
+/* Loop until the user closes the window */
+bool Application::isRunning() const
+{
+    return !glfwWindowShouldClose(m_window->getNativeWindow()) && !m_shouldClose;
+}
 
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
+void Application::clear() const
+{
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
 
-    ImGui_ImplGlfw_InitForOpenGL(renderer.getWindow().getNativeWindow(), true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
+void Application::update() const
+{
+    m_window->update();
+}
 
-    VertexArray vertexArray;
-    VertexBuffer vertexBuffer(sizeof(Vertex) * 8);
-    VertexBufferLayout vertexBufferLayout;
+void Application::draw(
+        const VertexArray &vertexArray,
+        const IndexBuffer &indexBuffer
+) const
+{
+    vertexArray.bind();
+    indexBuffer.bind();
 
-    vertexBufferLayout.push<GLfloat>(VERTEX_POSITION_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLfloat>(VERTEX_COLOR_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLfloat>(VERTEX_TEXTURE_COORD_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLuint>(VERTEX_TEXTURE_INDEX_COMPONENT_COUNT);
+    glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, nullptr);
+}
 
-    vertexArray.addBuffer(vertexBuffer, vertexBufferLayout);
-
-    const GLuint INDICES_COUNT = 6 * 2;
-    GLuint indices[INDICES_COUNT] = {
-       0,  1,  2,  2,  3,  0,
-       4,  5,  6,  6,  7,  4
-    };
-
-    IndexBuffer indexBuffer(indices, INDICES_COUNT);
-
-    Shader shader("shaders/Basic.shader");
-    Texture oglTexture("textures/texture.png", 0);
-    Texture cobblestoneTexture("textures/cobblestone.png", 1);
-
-    shader.bind();
-    oglTexture.bind();
-    cobblestoneTexture.bind();
-
-    GLint samplers[2] =
-    {
-        oglTexture.getSlotIndex(),
-        cobblestoneTexture.getSlotIndex()
-    };
-
-    shader.setUniform1iv("u_textures", samplers);
-
-    glm::vec3 cameraTranslation(500.0f, 250.0f, 0.0);
-    glm::vec3 modelTranslation(0.0f, 0.0f, 0.0f);
-
-    glm::vec2 q0Translation(0.0f, 0.0f);
-    glm::vec2 q1Translation(100.0f, 100.0f);
-
-    GLfloat zoom = 1.0f;
-
-
-    while (renderer.isRunning())
-    {
-        auto q0 = buildQuad(q0Translation, 0);
-        auto q1 = buildQuad(q1Translation, 1);
-
-        Vertex verticies[8];
-
-        memcpy(verticies, q0.data(), q0.size() * sizeof(Vertex));
-        memcpy(verticies + q0.size(), q1.data(), q1.size() * sizeof(Vertex));
-
-        vertexBuffer.bind(verticies, sizeof(verticies));
-
-        renderer.clear();
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        shader.bind();
-        oglTexture.bind();
-        cobblestoneTexture.bind();
-        shader.setUniformMat4f("u_mvp", renderer.getMVPMatrix(modelTranslation, zoom));
-
-        renderer.draw(vertexArray, indexBuffer);
-
-        {
-            ImGui::Begin("params");
-            ImGui::SliderFloat2("camera position", &cameraTranslation.x, 0, (float)width, "%g", 0);
-            ImGui::SliderFloat("camera zoom", &zoom, .25f, 2.5f, "%g", 0);
-            ImGui::SliderFloat2("object 1 position", &q0Translation.x, 0, (float)width, "%g", 0);
-            ImGui::SliderFloat2("object 2 position", &q1Translation.x, 0, (float)width, "%g", 0);
-            ImGui::End();
-        }
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-        renderer.update();
-    }
-
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
+void Application::shutdown() const
+{
     glfwTerminate();
-    return 0;
 }

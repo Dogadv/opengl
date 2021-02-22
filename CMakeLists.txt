@@ -11,7 +11,7 @@ set(PROJECT_HEADER_FILES
         src/core/shader/Shader.h
         src/core/texture/Texture.h
         src/platform/WindowsWindow.h
-        src/core/renderer/Renderer.h
+        src/core/application/Application.h
         src/core/application/Window.h
         src/core/buffer/index/IndexBuffer.h
         src/core/camera/OrthographicCamera.h
@@ -24,11 +24,10 @@ set(PROJECT_SOURCE_FILES
         src/pch.cpp
         src/core/shader/Shader.cpp
         src/core/texture/Texture.cpp
-        src/playground/Playground.cpp
         src/platform/WindowsWindow.cpp
-        src/core/renderer/Renderer.cpp
-        src/core/application/Window.cpp
         src/core/application/Application.cpp
+        src/core/application/Window.cpp
+        src/sandbox/Sandbox.cpp
         src/core/buffer/index/IndexBuffer.cpp
         src/core/camera/OrthographicCamera.cpp
         src/core/buffer/vertex/VertexArray.cpp

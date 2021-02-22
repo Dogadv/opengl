@@ -56,5 +56,10 @@ WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t 
 
 void WindowsWindow::update()
 {
+    /* Swap front and back buffers */
+    glfwSwapBuffers(m_window);
+
+    /* Poll for and process events */
+    glfwPollEvents();
 
 }
