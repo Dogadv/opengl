@@ -1,8 +1,10 @@
-- TODO:
-    * Fix CMake configuration;
-	* Abstract and imporove inputs;
+# TODO:
+	* Abstract and improve keyboard inputs;
 	* Abstract window creating;
 	* Abstract Camera controls;
+
+# 21.02.2021
+    * Fixed CMake configuration;
 
 # 15.02.2021
 	* Camera abstraction;
