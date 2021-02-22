@@ -10,10 +10,10 @@ public:
 	VertexBuffer(GLuint size);
 	~VertexBuffer();
 
-	void bind(Vertex* verticies, GLuint size) const;
+	void bind(Vertex* vertices, GLuint size) const;
 	void unbind() const;
 
-	inline uint32_t getRendererId() const { return m_rendererId; }
+    [[nodiscard]] inline uint32_t getRendererId() const { return m_rendererId; }
 
 private:
 	uint32_t m_rendererId;

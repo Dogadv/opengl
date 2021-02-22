@@ -4,8 +4,8 @@
 #include <fstream>
 #include <sstream>
 
-Shader::Shader(const std::string& filepath)
-    :m_rendererId(0)
+Shader::Shader(const std::string &filepath)
+        : m_rendererId(0)
 {
     ShaderProgram shaderProgram = parseShader(filepath);
     m_rendererId = createShader(shaderProgram.VertexShader, shaderProgram.FragmentShader);
@@ -26,25 +26,27 @@ void Shader::unbind() const
     glUseProgram(0);
 }
 
-void Shader::setUniform4f(const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
+void Shader::setUniform4f(const std::string &name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
 {
     glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
 }
 
-void Shader::setUniform1i(const std::string& name, GLuint value) {
+void Shader::setUniform1i(const std::string &name, GLuint value)
+{
     glUniform1i(getUniformLocation(name), value);
 }
 
-void Shader::setUniform1iv(const std::string& name, GLint value[])
+void Shader::setUniform1iv(const std::string &name, GLint value[])
 {
-    glUniform1iv(getUniformLocation(name), 2 , value);
+    glUniform1iv(getUniformLocation(name), 2, value);
 }
 
-void Shader::setUniformMat4f(const std::string& name, glm::mat4 value) {
+void Shader::setUniformMat4f(const std::string &name, glm::mat4 value)
+{
     glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &value[0][0]);
 }
 
-ShaderProgram Shader::parseShader(const std::string& filepath)
+ShaderProgram Shader::parseShader(const std::string &filepath)
 {
     enum class ShaderType
     {
@@ -65,19 +67,18 @@ ShaderProgram Shader::parseShader(const std::string& filepath)
                 currentShaderType = ShaderType::VERTEX;
             else if (line.find("fragment") != std::string::npos)
                 currentShaderType = ShaderType::FRAGMENT;
-        }
-        else
+        } else
         {
-            s_stream[(int)currentShaderType] << line << "\n";
+            s_stream[(int) currentShaderType] << line << "\n";
         }
     }
 
     stream.close();
 
-    return { s_stream[(int)ShaderType::VERTEX].str(), s_stream[(int)ShaderType::FRAGMENT].str() };
+    return {s_stream[(int) ShaderType::VERTEX].str(), s_stream[(int) ShaderType::FRAGMENT].str()};
 }
 
-uint32_t Shader::createShader(const std::string& vertexShader, const std::string& fragmentShader)
+uint32_t Shader::createShader(const std::string &vertexShader, const std::string &fragmentShader)
 {
     uint32_t program = glCreateProgram();
     uint32_t vertexShaderId = compileShader(GL_VERTEX_SHADER, vertexShader);
@@ -94,10 +95,10 @@ uint32_t Shader::createShader(const std::string& vertexShader, const std::string
     return program;
 }
 
-uint32_t Shader::compileShader(uint32_t type, const std::string& source)
+uint32_t Shader::compileShader(uint32_t type, const std::string &source)
 {
     uint32_t shaderId = glCreateShader(type);
-    const char* shaderSource = source.c_str();
+    const char *shaderSource = source.c_str();
 
     glShaderSource(shaderId, 1, &shaderSource, nullptr);
     glCompileShader(shaderId);
@@ -110,7 +111,7 @@ uint32_t Shader::compileShader(uint32_t type, const std::string& source)
         int length;
         glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
 
-        char* errorMessage = (char*)_malloca(length * sizeof(char));
+        char *errorMessage = (char *) _malloca(length * sizeof(char));
         glGetShaderInfoLog(shaderId, length, &length, errorMessage);
 
         std::cout << "Could not compile a shader!" << "\n" << errorMessage << std::endl;
@@ -119,10 +120,10 @@ uint32_t Shader::compileShader(uint32_t type, const std::string& source)
         return 0;
     }
 
-	return shaderId;
+    return shaderId;
 }
 
-int32_t Shader::getUniformLocation(const std::string& name)
+int32_t Shader::getUniformLocation(const std::string &name)
 {
     if (m_uniformLocationCache.find(name) != m_uniformLocationCache.end())
         return m_uniformLocationCache[name];
@@ -130,7 +131,7 @@ int32_t Shader::getUniformLocation(const std::string& name)
     int32_t location = glGetUniformLocation(m_rendererId, name.c_str());
     if (location == -1)
         std::cout << "ERROR! uniform: " << name << " was not found in a shader declaratiom" << std::endl;
-    
+
     m_uniformLocationCache[name] = location;
 
     return location;

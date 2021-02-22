@@ -1,71 +1,27 @@
 #include "Renderer.h"
 
-#include<iostream>
 #include<string>
 
-void GLAPIENTRY onGLError(GLenum source,
-    GLenum type,
-    GLuint id,
-    GLenum severity,
-    GLsizei length,
-    const GLchar* message,
-    const void* userParam)
+Renderer::Renderer(const std::string &title, uint32_t width, uint32_t height, OrthographicCamera &camera)
+        : m_camera(camera)
 {
-    std::cout <<
-        "ERROR: " << type <<
-        "\nMessage: " << message <<
-        "\n" << std::endl;
-    //__debugbreak();
-}
-
-Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_t height, Camera& camera)
-    : m_camera(camera)
-{
-    /* Initialize the library */
-    if (!glfwInit()) __debugbreak();
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    /* Create a windowed mode window and its OpenGL context */
-    m_window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
-    if (!m_window)
-    {
-        glfwTerminate();
-        __debugbreak();
-    }
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(m_window);
-    glfwSwapInterval(1);
-
-    /* Initialize GLEW */
-    glewInit();
-
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(onGLError, 0);
-
-    std::cout << glGetString(GL_VERSION) << "\n" << glGetString(GL_RENDERER) << "\n" << std::endl;
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glfwSetWindowUserPointer(m_window, this);
+    m_window = Window::create(title, width, height);
 
     /* 
      * TODO: Abstract and improve inputs!
      *       - Platform indepentent inputs;
      */
-    glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+
+    glfwSetWindowUserPointer(m_window->getNativeWindow(), this);
+    glfwSetKeyCallback(m_window->getNativeWindow(), [](GLFWwindow *window, int key, int scancode, int action, int mods)
+    {
+        Renderer &renderer = *(Renderer *) glfwGetWindowUserPointer(window);
+
+        // TODO: temporary solution
+        float cameraTranslationDelta = 10.0f;
+
+        switch (action)
         {
-            Renderer& renderer = *(Renderer*) glfwGetWindowUserPointer(window);
-
-            // TODO: temporary solution
-            float cameraTranslationDelta = 10.0f;
-
-            switch (action)
-            {
             case GLFW_PRESS:
             case GLFW_REPEAT:
             {
@@ -86,13 +42,13 @@ Renderer::Renderer(const std::string& title, const uint32_t width, const uint32_
                 }
                 break;
             }
-            }
-        });
+        }
+    });
 }
 
-void Renderer::translateCamera(glm::vec3 cameratranslation)
+void Renderer::translateCamera(glm::vec3 cameraTranslation)
 {
-   m_camera.moveBy(cameratranslation);
+    m_camera.moveBy(cameraTranslation);
 }
 
 void Renderer::setKeyCallback(GLFWkeyfun callback) const
@@ -103,31 +59,31 @@ void Renderer::setKeyCallback(GLFWkeyfun callback) const
 /* Loop until the user closes the window */
 bool Renderer::isRunning() const
 {
-    return !glfwWindowShouldClose(m_window);
+    return !glfwWindowShouldClose(m_window->getNativeWindow()) && !m_shouldClose;
 }
 
 void Renderer::clear() const
 {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT); 
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Renderer::update() const
 {
     /* Swap front and back buffers */
-    glfwSwapBuffers(m_window);
+    glfwSwapBuffers(m_window->getNativeWindow());
 
     /* Poll for and process events */
     glfwPollEvents();
 }
 
 void Renderer::draw(
-    const VertexArray& vertexArray,
-    const IndexBuffer& indexBuffer
+        const VertexArray &vertexArray,
+        const IndexBuffer &indexBuffer
 ) const
 {
     vertexArray.bind();
-	indexBuffer.bind();
+    indexBuffer.bind();
 
-	glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, nullptr);
 }

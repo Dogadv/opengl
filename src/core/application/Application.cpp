@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include <array>
 
 #include "../buffer/vertex/VertexBuffer.h"
@@ -9,9 +8,6 @@
 #include "../texture/Texture.h"
 #include "../shader/Shader.h"
 #include "../renderer/Renderer.h"
-#include "../camera/Camera.h"
-
-#include "../entity/Vertex.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -36,18 +32,15 @@ int main()
     const uint32_t width = 1280;
     const uint32_t height = 720;
 
-    Camera orthoCamera(CameraProjection::Orthographic, width, height);
+    OrthographicCamera orthoCamera(width, height);
 
     Renderer renderer("Hello, OpenGL!", width, height, orthoCamera);
-    GLFWwindow* window = renderer.getWindow();
 
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(renderer.getWindow().getNativeWindow(), true);
     ImGui_ImplOpenGL3_Init(glsl_version);
-
-    const int verteciesCount = 8;
 
     VertexArray vertexArray;
     VertexBuffer vertexBuffer(sizeof(Vertex) * 8);
@@ -60,14 +53,13 @@ int main()
 
     vertexArray.addBuffer(vertexBuffer, vertexBufferLayout);
 
-    const GLuint INDECIES_COUNT = 6 * 2;
-    GLuint indecies[INDECIES_COUNT] = {
+    const GLuint INDICES_COUNT = 6 * 2;
+    GLuint indices[INDICES_COUNT] = {
        0,  1,  2,  2,  3,  0,
        4,  5,  6,  6,  7,  4
     };
 
-    const GLuint IBO_SIZE = sizeof(indecies);
-    IndexBuffer indexBuffer(indecies, INDECIES_COUNT);
+    IndexBuffer indexBuffer(indices, INDICES_COUNT);
 
     Shader shader("shaders/Basic.shader");
     Texture oglTexture("textures/texture.png", 0);

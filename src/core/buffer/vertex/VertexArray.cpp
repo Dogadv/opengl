@@ -2,39 +2,40 @@
 
 VertexArray::VertexArray()
 {
-	glCreateVertexArrays(1, &m_rendererId);
+    glCreateVertexArrays(1, &m_rendererId);
 }
 
 VertexArray::~VertexArray()
 {
-	glDeleteVertexArrays(1, &m_rendererId);
+    glDeleteVertexArrays(1, &m_rendererId);
 }
 
 void VertexArray::bind() const
 {
-	glBindVertexArray(m_rendererId);
+    glBindVertexArray(m_rendererId);
 }
 
 void VertexArray::unbind() const
 {
-	glBindVertexArray(0);
+    glBindVertexArray(0);
 }
 
-void VertexArray::addBuffer(VertexBuffer& vertexBuffer, VertexBufferLayout& vertexBufferLayout)
+void VertexArray::addBuffer(VertexBuffer &vertexBuffer, VertexBufferLayout &vertexBufferLayout)
 {
-	bind();
-	//vertexBuffer.bind();
+    bind();
+    //vertexBuffer.bind();
 
-	const auto& entries = vertexBufferLayout.getEntries();
-	uint32_t offset = 0;
+    const auto &entries = vertexBufferLayout.getEntries();
+    uint32_t offset = 0;
 
-	for (uint32_t i = 0; i < entries.size(); i++)
-	{
-		const auto& entry = entries[i];
+    for (uint32_t i = 0; i < entries.size(); i++)
+    {
+        const auto &entry = entries[i];
 
-		glEnableVertexArrayAttrib(vertexBuffer.getRendererId(), i);
-		glVertexAttribPointer(i, entry.count, entry.type, entry.normalized, vertexBufferLayout.getStride(), (const void*) offset);
-	
-		offset += entry.count * entry.size;
-	}
+        glEnableVertexArrayAttrib(vertexBuffer.getRendererId(), i);
+        glVertexAttribPointer(i, entry.count, entry.type, entry.normalized, vertexBufferLayout.getStride(),
+                              (const void *) offset);
+
+        offset += entry.count * entry.size;
+    }
 }

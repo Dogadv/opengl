@@ -8,14 +8,14 @@
 class VertexArray
 {
 public:
-	VertexArray();
-	~VertexArray();
+    VertexArray();
+    ~VertexArray();
 
-	void addBuffer(VertexBuffer& vertexBuffer, VertexBufferLayout& vertexBufferLayout);
+    void addBuffer(VertexBuffer &vertexBuffer, VertexBufferLayout &vertexBufferLayout);
 
-	void bind() const;
-	void unbind() const;
+    void bind() const;
+    void unbind() const;
 
 private:
-	uint32_t m_rendererId;
+    uint32_t m_rendererId;
 };

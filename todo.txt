@@ -3,6 +3,11 @@
 	* Abstract window creating;
 	* Abstract Camera controls;
 
+# 22.02.2021
+    * Implemented abstract window;
+    * Refactored camera implementation;
+    * Cleaned up code;
+
 # 21.02.2021
     * Fixed CMake configuration;
 
