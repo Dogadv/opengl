@@ -7,12 +7,13 @@ include(src/vendor/CMakeLists.txt)
 
 set(PROJECT_HEADER_FILES
         src/pch.h
+        src/core/input/Input.h
         src/core/entity/Vertex.h
         src/core/shader/Shader.h
         src/core/texture/Texture.h
         src/platform/WindowsWindow.h
-        src/core/application/Application.h
         src/core/application/Window.h
+        src/core/application/Application.h
         src/core/buffer/index/IndexBuffer.h
         src/core/camera/OrthographicCamera.h
         src/core/buffer/vertex/VertexArray.h
@@ -22,12 +23,13 @@ set(PROJECT_HEADER_FILES
 
 set(PROJECT_SOURCE_FILES
         src/pch.cpp
+        src/sandbox/Sandbox.cpp
         src/core/shader/Shader.cpp
         src/core/texture/Texture.cpp
+        src/platform/WindowsInput.cpp
         src/platform/WindowsWindow.cpp
-        src/core/application/Application.cpp
         src/core/application/Window.cpp
-        src/sandbox/Sandbox.cpp
+        src/core/application/Application.cpp
         src/core/buffer/index/IndexBuffer.cpp
         src/core/camera/OrthographicCamera.cpp
         src/core/buffer/vertex/VertexArray.cpp

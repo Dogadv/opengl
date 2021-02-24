@@ -26,8 +26,9 @@ int main()
     const uint32_t width = 1280;
     const uint32_t height = 720;
 
-    OrthographicCamera orthoCamera(width, height);
+    OrthographicCamera orthoCamera((uint32_t) (width / 2), (uint32_t) (height / 2));
     Application application("Hello, OpenGL!", width, height, orthoCamera);
+    Input &input = application.getInput();
 
     VertexArray vertexArray;
     VertexBuffer vertexBuffer(sizeof(Vertex) * 8);
@@ -70,10 +71,13 @@ int main()
     glm::vec2 q0Translation(0.0f, 0.0f);
     glm::vec2 q1Translation(100.0f, 100.0f);
 
-    GLfloat zoom = 1.0f;
+    float zoom = 1.0f;
+    float cameraSpeed = 3.0f;
 
     while (application.isRunning())
     {
+        application.clear();
+
         auto q0 = buildQuad(q0Translation, 0);
         auto q1 = buildQuad(q1Translation, 1);
 
@@ -84,14 +88,18 @@ int main()
 
         vertexBuffer.bind(vertices, sizeof(vertices));
 
-        application.clear();
-
         shader.bind();
         oglTexture.bind();
         cobblestoneTexture.bind();
         shader.setUniformMat4f("u_mvp", application.getMVPMatrix(modelTranslation, zoom));
 
         application.draw(vertexArray, indexBuffer);
+
+        if (input.isKeyPressed(GLFW_KEY_W)) orthoCamera.moveBy(glm::vec3(0.0, -cameraSpeed, 0.0));
+        if (input.isKeyPressed(GLFW_KEY_A)) orthoCamera.moveBy(glm::vec3(cameraSpeed, 0.0, 0.0));
+        if (input.isKeyPressed(GLFW_KEY_S)) orthoCamera.moveBy(glm::vec3(0.0, cameraSpeed, 0.0));
+        if (input.isKeyPressed(GLFW_KEY_D)) orthoCamera.moveBy(glm::vec3(-cameraSpeed, 0.0, 0.0));
+
         application.update();
     }
 

@@ -4,12 +4,12 @@
 #include <string>
 #include <memory>
 
-#include "../buffer/vertex/VertexArray.h"
-#include "../buffer/index/IndexBuffer.h"
-
 #include "Window.h"
 
+#include "../buffer/vertex/VertexArray.h"
+#include "../buffer/index/IndexBuffer.h"
 #include "../camera/OrthographicCamera.h"
+#include "../../core/input/Input.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -29,9 +29,8 @@ public:
             const IndexBuffer &indexBuffer
     ) const;
 
-    void setKeyCallback(GLFWkeyfun callback) const;
-    void translateCamera(glm::vec3 cameraTranslation);
 
+    [[nodiscard]] Input &getInput() const { return *m_input; }
     [[nodiscard]] Window &getWindow() const { return *m_window; }
 
     [[nodiscard]] glm::mat4 getMVPMatrix(const glm::vec3 modelTranslation, const float zoom) const
@@ -52,6 +51,7 @@ public:
 private:
     OrthographicCamera &m_camera;
     std::unique_ptr<Window> m_window;
+    std::unique_ptr<Input> m_input;
 
     bool m_shouldClose = false;
 };

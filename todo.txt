@@ -1,7 +1,10 @@
 # TODO:
-	* Abstract and improve keyboard inputs;
 	* Abstract window creating;
 	* Abstract Camera controls;
+	* Migrate libs to own forked repositories;
+
+# 24.02.2021
+    * Abstracted and improved keyboard inputs;
 
 # 22.02.2021
     * Implemented abstract window;

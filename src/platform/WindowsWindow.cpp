@@ -49,17 +49,10 @@ WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t 
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glfwSetWindowUserPointer(m_window, this);
-
 }
 
 void WindowsWindow::update()
 {
-    /* Swap front and back buffers */
-    glfwSwapBuffers(m_window);
-
-    /* Poll for and process events */
     glfwPollEvents();
-
+    glfwSwapBuffers(m_window);
 }
