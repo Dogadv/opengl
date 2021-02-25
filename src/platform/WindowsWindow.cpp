@@ -42,6 +42,8 @@ WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t 
     /* Initialize GLEW */
     glewInit();
 
+    glEnable(GL_DEPTH_TEST);
+
     glEnable(GL_DEBUG_OUTPUT);
     glDebugMessageCallback(onGLError, nullptr);
 
