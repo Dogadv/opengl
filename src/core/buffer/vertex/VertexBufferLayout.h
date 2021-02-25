@@ -5,6 +5,11 @@
 
 #include <GL/glew.h>
 
+enum class VertexDataType
+{
+    FLOAT, FLOAT2, FLOAT3, FLOAT4, INT
+};
+
 struct VertexBufferEntry
 {
     uint32_t type;
@@ -20,30 +25,31 @@ public:
             : m_stride(0) {}
 
     template<typename T>
-    void push(uint32_t count)
+    void set()
     {
         static_assert(false);
     }
 
-    template<>
-    void push<GLfloat>(uint32_t count)
-    {
-        uint8_t size = sizeof(GLfloat);
-
-        m_entries.push_back({GL_FLOAT, count, size, GL_FALSE});
-        m_stride += count * size;
-    }
-
-    template<>
-    void push<GLuint>(uint32_t count)
-    {
-        uint8_t size = sizeof(GLuint);
-
-        m_entries.push_back({GL_UNSIGNED_INT, count, size, GL_FALSE});
-        m_stride += count * size;
-    }
-
     inline const std::vector<VertexBufferEntry> &getEntries() const { return m_entries; }
+
+    template<>
+    void set<Vertex>()
+    {
+        m_entries.push_back(
+                {GL_FLOAT, VERTEX_POSITION_COMPONENT_COUNT, sizeof(GLfloat), GL_FALSE}
+        );
+        m_entries.push_back(
+                {GL_FLOAT, VERTEX_COLOR_COMPONENT_COUNT, sizeof(GLfloat), GL_FALSE}
+        );
+        m_entries.push_back(
+                {GL_FLOAT, VERTEX_TEXTURE_COORD_COMPONENT_COUNT, sizeof(GLfloat), GL_FALSE}
+        );
+        m_entries.push_back(
+                {GL_UNSIGNED_INT, VERTEX_TEXTURE_INDEX_COMPONENT_COUNT, sizeof(GLuint), GL_FALSE}
+        );
+
+        m_stride = sizeof(Vertex);
+    }
     inline uint32_t getStride() const { return m_stride; }
 
 private:

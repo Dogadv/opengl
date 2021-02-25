@@ -31,14 +31,10 @@ int main()
     Input &input = application.getInput();
 
     VertexArray vertexArray;
-    VertexBuffer vertexBuffer(sizeof(Vertex) * 8);
+    VertexBuffer vertexBuffer(sizeof(Vertex) * 1000);
     VertexBufferLayout vertexBufferLayout;
 
-    vertexBufferLayout.push<GLfloat>(VERTEX_POSITION_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLfloat>(VERTEX_COLOR_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLfloat>(VERTEX_TEXTURE_COORD_COMPONENT_COUNT);
-    vertexBufferLayout.push<GLuint>(VERTEX_TEXTURE_INDEX_COMPONENT_COUNT);
-
+    vertexBufferLayout.set<Vertex>();
     vertexArray.addBuffer(vertexBuffer, vertexBufferLayout);
 
     const GLuint INDICES_COUNT = 6 * 2;
