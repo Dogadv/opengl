@@ -1,7 +1,11 @@
 # TODO:
-	* Abstract window creating;
-	* Abstract Camera controls;
+	* Abstract Camera controls(camera controller);
 	* Migrate libs to own forked repositories;
+	* Implement perspective camera;
+	* Dynamic vertex batching;
+	* Texture batching;
+	* Implement scenes system;
+	* Add mouse wheel scroll detection;
 
 # 24.02.2021
     * Abstracted and improved keyboard inputs;
