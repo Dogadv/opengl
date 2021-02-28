@@ -5,9 +5,12 @@ OrthographicCamera::OrthographicCamera(float width, float height)
           m_zoom(1.0f),
           m_angle(0.0f),
           m_position({0.0f, 0.0f, 0.0f}),
-          m_projection(glm::ortho(-m_aspectRatio * m_zoom, m_aspectRatio * m_zoom, -m_zoom, m_zoom, -1.0f, 1.0f)),
-          m_view(1.0),
-          m_viewProjection(m_projection * m_view) {}
+          m_projection(1.0f),
+          m_view(1.0f),
+          m_viewProjection(1.0f)
+{
+    recalculateViewProjection();
+}
 
 void OrthographicCamera::moveBy(glm::vec3 delta)
 {

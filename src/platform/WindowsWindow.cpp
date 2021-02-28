@@ -57,6 +57,7 @@ WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t 
     glfwSetWindowSizeCallback(m_window, [](GLFWwindow *nativeWindow, int width, int height)
     {
         WindowsWindow &window = *(WindowsWindow *) glfwGetWindowUserPointer(nativeWindow);
+
         window.resize(width, height);
     });
 }

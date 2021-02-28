@@ -26,7 +26,7 @@ int main()
     const uint32_t width = 1280;
     const uint32_t height = 720;
 
-    OrthographicCamera orthoCamera((uint32_t) (width / 2), (uint32_t) (height / 2));
+    OrthographicCamera orthoCamera(width, height);
     Application application("Hello, OpenGL!", width, height, orthoCamera);
     Input &input = application.getInput();
 
