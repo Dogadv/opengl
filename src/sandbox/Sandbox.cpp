@@ -11,7 +11,7 @@
 
 static std::array<Vertex, 4> buildQuad(const glm::vec2 &position, const GLuint textureIndex)
 {
-    GLfloat size = 100.0f;
+    GLfloat size = 1.0f;
 
     Vertex v0 = {{position.x, position.y}, {0.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f}, textureIndex};
     Vertex v1 = {{position.x + size, position.y}, {0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 0.0f}, textureIndex};
@@ -61,14 +61,13 @@ int main()
 
     shader.setUniform1iv("u_textures", samplers);
 
-    glm::vec3 cameraTranslation(500.0f, 250.0f, 0.0);
+    glm::vec3 cameraTranslation(5.0f, 2.5f, 0.0);
     glm::vec3 modelTranslation(0.0f, 0.0f, 0.0f);
 
     glm::vec2 q0Translation(0.0f, 0.0f);
-    glm::vec2 q1Translation(100.0f, 100.0f);
+    glm::vec2 q1Translation(1.0f, 1.0f);
 
-    float zoom = 1.0f;
-    float cameraSpeed = 3.0f;
+    float cameraSpeed = 0.05f;
 
     while (application.isRunning())
     {
@@ -87,7 +86,7 @@ int main()
         shader.bind();
         oglTexture.bind();
         cobblestoneTexture.bind();
-        shader.setUniformMat4f("u_mvp", application.getMVPMatrix(modelTranslation, zoom));
+        shader.setUniformMat4f("u_mvp", application.getMVPMatrix(modelTranslation));
 
         application.draw(vertexArray, indexBuffer);
 

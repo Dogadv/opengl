@@ -5,7 +5,12 @@
 Application::Application(const std::string &title, uint32_t width, uint32_t height, OrthographicCamera &camera)
         : m_camera(camera)
 {
-    m_window = Window::create(title, width, height);
+
+    WindowEventsListener windowEventsListener = [this](WindowEvents event) {
+        onEvent(event);
+    };
+
+    m_window = Window::create(title, width, height, windowEventsListener);
     m_input = std::make_unique<Input>(m_window->getNativeWindow());
 }
 
@@ -39,4 +44,22 @@ void Application::draw(
 void Application::shutdown() const
 {
     glfwTerminate();
+}
+
+void Application::onEvent(WindowEvents event)
+{
+    switch (event)
+    {
+        case WindowEvents::OnResize:
+        {
+            uint32_t width = m_window->getWidth();
+            uint32_t height = m_window->getHeight();
+
+            m_camera.resize(width, height);
+        }
+            break;
+        case WindowEvents::OnClose:
+            // TODO: Implement
+            break;
+    }
 }

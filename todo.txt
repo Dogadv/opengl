@@ -7,6 +7,10 @@
 	* Implement scenes system;
 	* Add mouse wheel scroll detection;
 
+# 28.02.2021
+    * Refactored camera;
+    * Implemented window resize;
+
 # 24.02.2021
     * Abstracted and improved keyboard inputs;
 

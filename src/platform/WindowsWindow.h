@@ -12,10 +12,10 @@
 class WindowsWindow : public Window
 {
 public:
-    WindowsWindow(const std::string &title, uint32_t width, uint32_t height);
+    WindowsWindow(const std::string &title, uint32_t width, uint32_t height, WindowEventsListener &callback);
     ~WindowsWindow() = default;
 
-    virtual void update() override;
+    void update() override;
 
     [[nodiscard]] GLFWwindow *getNativeWindow() const override { return m_window; }
 
@@ -26,6 +26,10 @@ private:
     GLFWwindow *m_window;
 
     const std::string &m_title;
-    const uint32_t m_width;
-    const uint32_t m_height;
+    uint32_t m_width;
+    uint32_t m_height;
+
+    WindowEventsListener m_eventCallback;
+private:
+    void resize(uint32_t width, uint32_t height);
 };

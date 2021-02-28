@@ -15,10 +15,11 @@ void GLAPIENTRY onGLError(GLenum source,
     //__debugbreak();
 }
 
-WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t height)
+WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t height, WindowEventsListener& callback)
         : m_title(title),
           m_width(width),
-          m_height(height)
+          m_height(height),
+          m_eventCallback(callback)
 {
     /* Initialize the library */
     if (!glfwInit()) __debugbreak();
@@ -51,10 +52,25 @@ WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t 
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glfwSetWindowUserPointer(m_window, this);
+    glfwSetWindowSizeCallback(m_window, [](GLFWwindow *nativeWindow, int width, int height)
+    {
+        WindowsWindow &window = *(WindowsWindow *) glfwGetWindowUserPointer(nativeWindow);
+        window.resize(width, height);
+    });
 }
 
 void WindowsWindow::update()
 {
     glfwPollEvents();
     glfwSwapBuffers(m_window);
+}
+void WindowsWindow::resize(uint32_t width, uint32_t height)
+{
+    m_width = width;
+    m_height = height;
+
+    m_eventCallback(WindowEvents::OnResize);
+    glViewport(0, 0, width, height);
 }
