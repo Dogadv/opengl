@@ -26,8 +26,7 @@ int main()
     const uint32_t width = 1280;
     const uint32_t height = 720;
 
-    OrthographicCamera orthoCamera(width, height);
-    Application application("Hello, OpenGL!", width, height, orthoCamera);
+    Application application("Hello, OpenGL!", width, height, CameraType::Orthographic);
     Input &input = application.getInput();
 
     VertexArray vertexArray;
@@ -67,8 +66,6 @@ int main()
     glm::vec2 q0Translation(0.0f, 0.0f);
     glm::vec2 q1Translation(1.0f, 1.0f);
 
-    float cameraSpeed = 0.05f;
-
     while (application.isRunning())
     {
         application.clear();
@@ -89,11 +86,6 @@ int main()
         shader.setUniformMat4f("u_mvp", application.getMVPMatrix(modelTranslation));
 
         application.draw(vertexArray, indexBuffer);
-
-        if (input.isKeyPressed(GLFW_KEY_W)) orthoCamera.moveBy(glm::vec3(0.0, -cameraSpeed, 0.0));
-        if (input.isKeyPressed(GLFW_KEY_A)) orthoCamera.moveBy(glm::vec3(cameraSpeed, 0.0, 0.0));
-        if (input.isKeyPressed(GLFW_KEY_S)) orthoCamera.moveBy(glm::vec3(0.0, cameraSpeed, 0.0));
-        if (input.isKeyPressed(GLFW_KEY_D)) orthoCamera.moveBy(glm::vec3(-cameraSpeed, 0.0, 0.0));
 
         application.update();
     }

@@ -7,8 +7,7 @@
 
 #include "../buffer/vertex/VertexArray.h"
 #include "../buffer/index/IndexBuffer.h"
-#include "../camera/OrthographicCamera.h"
-#include "../../core/input/Input.h"
+#include "../camera/CameraController.h"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -16,7 +15,7 @@
 class Application
 {
 public:
-    Application(const std::string &title, uint32_t width, uint32_t height, OrthographicCamera &camera);
+    Application(const std::string &title, uint32_t width, uint32_t height, CameraType cameraType);
 
     [[nodiscard]] bool isRunning() const;
     void clear() const;
@@ -35,16 +34,16 @@ public:
 
     [[nodiscard]] glm::mat4 getMVPMatrix(const glm::vec3 modelTranslation) const
     {
-        glm::mat4 viewProjectionMatrix = m_camera.getViewProjectionMatrix();
+        glm::mat4 viewProjectionMatrix = m_cameraController->getViewProjectionMatrix();
         glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), modelTranslation);
 
         return viewProjectionMatrix * modelMatrix;
     }
 
 private:
-    OrthographicCamera &m_camera;
     std::unique_ptr<Window> m_window;
     std::unique_ptr<Input> m_input;
+    std::unique_ptr<CameraController> m_cameraController;
 
     bool m_shouldClose = false;
 };

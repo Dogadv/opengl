@@ -10,15 +10,18 @@ set(PROJECT_HEADER_FILES
         src/core/input/Input.h
         src/core/entity/Vertex.h
         src/core/shader/Shader.h
+        src/core/camera/Camera.h
         src/core/texture/Texture.h
         src/platform/WindowsWindow.h
         src/core/application/Window.h
+        src/core/camera/CameraController.h
         src/core/application/Application.h
         src/core/buffer/index/IndexBuffer.h
         src/core/camera/OrthographicCamera.h
         src/core/buffer/vertex/VertexArray.h
         src/core/buffer/vertex/VertexBuffer.h
         src/core/buffer/vertex/VertexBufferLayout.h
+        src/core/camera/OrthographicCameraController.h
         )
 
 set(PROJECT_SOURCE_FILES
@@ -29,11 +32,13 @@ set(PROJECT_SOURCE_FILES
         src/platform/WindowsInput.cpp
         src/platform/WindowsWindow.cpp
         src/core/application/Window.cpp
+        src/core/camera/CameraController.cpp
         src/core/application/Application.cpp
         src/core/buffer/index/IndexBuffer.cpp
         src/core/camera/OrthographicCamera.cpp
         src/core/buffer/vertex/VertexArray.cpp
         src/core/buffer/vertex/VertexBuffer.cpp
+        src/core/camera/OrthographicCameraController.cpp
         )
 
 include_directories(OGL ${VENDOR_INCLUDE_PATH})

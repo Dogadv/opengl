@@ -2,16 +2,15 @@
 
 #include<string>
 
-Application::Application(const std::string &title, uint32_t width, uint32_t height, OrthographicCamera &camera)
-        : m_camera(camera)
+Application::Application(const std::string &title, uint32_t width, uint32_t height, CameraType cameraType)
 {
-
     WindowEventsListener windowEventsListener = [this](WindowEvents event) {
         onEvent(event);
     };
 
     m_window = Window::create(title, width, height, windowEventsListener);
     m_input = std::make_unique<Input>(m_window->getNativeWindow());
+    m_cameraController = CameraController::create(cameraType, *m_input, float (width) / (float) height);
 }
 
 bool Application::isRunning() const
@@ -28,6 +27,7 @@ void Application::clear() const
 void Application::update() const
 {
     m_window->update();
+    m_cameraController->update();
 }
 
 void Application::draw(
@@ -55,7 +55,7 @@ void Application::onEvent(WindowEvents event)
             uint32_t width = m_window->getWidth();
             uint32_t height = m_window->getHeight();
 
-            m_camera.resize(width, height);
+            m_cameraController->resize(width, height);
         }
             break;
         case WindowEvents::OnClose:
