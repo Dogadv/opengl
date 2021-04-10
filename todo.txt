@@ -2,7 +2,9 @@
 	* Dynamic vertex batching;
 	* Texture batching;
 	* Improve zoom functionality(zoom limit, smoother zoom);
+	* Make vertex and fragment shaders being separate files;
 	* Implement scenes system;
+	* Refactor and clean up;
 	* Migrate libs to own forked repositories;
 	* Implement perspective camera;
 
