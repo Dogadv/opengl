@@ -1,10 +1,14 @@
 # TODO:
-	* Add mouse wheel scroll detection;
 	* Dynamic vertex batching;
 	* Texture batching;
+	* Improve zoom functionality(zoom limit, smoother zoom);
 	* Implement scenes system;
 	* Migrate libs to own forked repositories;
 	* Implement perspective camera;
+
+# 10.04.2021
+    * Added mouse wheel scroll detection;
+    * Implemented basic zoom functionality;
 
 # 3.03.2021
     * Implemented abstract Camera controller;

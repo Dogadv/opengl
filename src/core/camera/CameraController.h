@@ -10,6 +10,7 @@ public:
 
     virtual void update() = 0;
     virtual void resize(uint32_t width, uint32_t height) = 0;
+    virtual void zoomBy(float offset) = 0;
 
     virtual glm::mat4 getViewProjectionMatrix() = 0;
 

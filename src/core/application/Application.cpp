@@ -5,10 +5,14 @@
 Application::Application(const std::string &title, uint32_t width, uint32_t height, CameraType cameraType)
 {
     WindowEventsListener windowEventsListener = [this](WindowEvents event) {
-        onEvent(event);
+        onWindowEvent(event);
     };
 
-    m_window = Window::create(title, width, height, windowEventsListener);
+    ScrollEventsListener scrollEventsListener = [this](ScrollEvents event) {
+        onScrollEvent(event);
+    };
+
+    m_window = Window::create(title, width, height, windowEventsListener, scrollEventsListener);
     m_input = std::make_unique<Input>(m_window->getNativeWindow());
     m_cameraController = CameraController::create(cameraType, *m_input, float (width) / (float) height);
 }
@@ -46,7 +50,7 @@ void Application::shutdown() const
     glfwTerminate();
 }
 
-void Application::onEvent(WindowEvents event)
+void Application::onWindowEvent(WindowEvents event)
 {
     switch (event)
     {
@@ -60,6 +64,19 @@ void Application::onEvent(WindowEvents event)
             break;
         case WindowEvents::OnClose:
             // TODO: Implement
+            break;
+    }
+}
+
+void Application::onScrollEvent(ScrollEvents event)
+{
+    switch (event)
+    {
+        case ScrollEvents::OnScrollUp:
+            m_cameraController->zoomBy(-0.1f);
+            break;
+        case ScrollEvents::OnScrollDown:
+            m_cameraController->zoomBy(0.1f);
             break;
     }
 }

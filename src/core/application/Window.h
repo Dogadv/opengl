@@ -11,7 +11,15 @@ enum class WindowEvents
     OnClose
 };
 
+// Temporary solution until I find out something wiser
+enum class ScrollEvents
+{
+    OnScrollUp,
+    OnScrollDown
+};
+
 typedef std::function<void(WindowEvents)> WindowEventsListener;
+typedef std::function<void(ScrollEvents)> ScrollEventsListener;
 
 class Window
 {
@@ -25,5 +33,11 @@ public:
     [[nodiscard]] virtual uint32_t getWidth() const = 0;
     [[nodiscard]] virtual uint32_t getHeight() const = 0;
 
-    static std::unique_ptr<Window> create(const std::string &title, uint32_t width, uint32_t height, WindowEventsListener& callback);
+    static std::unique_ptr<Window> create(
+            const std::string &title,
+            uint32_t width,
+            uint32_t height,
+            WindowEventsListener& windowCallback,
+            ScrollEventsListener& scrollCallback
+            );
 };

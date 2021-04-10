@@ -27,7 +27,8 @@ public:
             const IndexBuffer &indexBuffer
     ) const;
 
-    void onEvent(WindowEvents event);
+    void onWindowEvent(WindowEvents event);
+    void onScrollEvent(ScrollEvents event);
 
     [[nodiscard]] Input &getInput() const { return *m_input; }
     [[nodiscard]] Window &getWindow() const { return *m_window; }

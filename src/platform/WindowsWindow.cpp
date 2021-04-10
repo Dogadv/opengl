@@ -15,11 +15,18 @@ void GLAPIENTRY onGLError(GLenum source,
     //__debugbreak();
 }
 
-WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t height, WindowEventsListener& callback)
+WindowsWindow::WindowsWindow(
+        const std::string &title,
+        uint32_t width,
+        uint32_t height,
+        WindowEventsListener &windowCallback,
+        ScrollEventsListener &scrollCallback
+        )
         : m_title(title),
           m_width(width),
           m_height(height),
-          m_eventCallback(callback)
+          m_windowEventCallback(windowCallback),
+          m_scrollEventCallback(scrollCallback)
 {
     /* Initialize the library */
     if (!glfwInit()) __debugbreak();
@@ -60,6 +67,13 @@ WindowsWindow::WindowsWindow(const std::string &title, uint32_t width, uint32_t 
 
         window.resize(width, height);
     });
+
+    glfwSetScrollCallback(m_window, [](GLFWwindow *nativeWindow, double xOffset, double yOffset)
+    {
+        WindowsWindow &window = *(WindowsWindow *) glfwGetWindowUserPointer(nativeWindow);
+
+        window.offsetZoom((int32_t) yOffset);
+    });
 }
 
 void WindowsWindow::update()
@@ -67,11 +81,17 @@ void WindowsWindow::update()
     glfwPollEvents();
     glfwSwapBuffers(m_window);
 }
-void WindowsWindow::resize(uint32_t width, uint32_t height)
+void WindowsWindow::resize(int32_t width, int32_t height)
 {
     m_width = width;
     m_height = height;
 
-    m_eventCallback(WindowEvents::OnResize);
+    m_windowEventCallback(WindowEvents::OnResize);
     glViewport(0, 0, width, height);
+}
+
+void WindowsWindow::offsetZoom(int32_t offset)
+{
+    if (offset > 0) m_scrollEventCallback(ScrollEvents::OnScrollUp);
+    else m_scrollEventCallback(ScrollEvents::OnScrollDown);
 }

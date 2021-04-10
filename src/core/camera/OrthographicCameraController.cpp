@@ -1,4 +1,5 @@
 #include "OrthographicCameraController.h"
+#include <iostream>
 
 OrthographicCameraController::OrthographicCameraController(Input &input, float aspectRation)
         : m_input(input),
@@ -27,4 +28,12 @@ void OrthographicCameraController::resize(uint32_t width, uint32_t height)
 glm::mat4 OrthographicCameraController::getViewProjectionMatrix()
 {
     return m_camera.getViewProjectionMatrix();
+}
+
+void OrthographicCameraController::zoomBy(float offset)
+{
+    m_zoom += offset;
+    m_camera.setProjection(-m_aspectRatio * m_zoom, m_aspectRatio * m_zoom, -m_zoom, m_zoom);
+
+    std::cout << offset << std::endl;
 }

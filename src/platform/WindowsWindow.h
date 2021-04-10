@@ -12,7 +12,13 @@
 class WindowsWindow : public Window
 {
 public:
-    WindowsWindow(const std::string &title, uint32_t width, uint32_t height, WindowEventsListener &callback);
+    WindowsWindow(
+            const std::string &title,
+            uint32_t width,
+            uint32_t height,
+            WindowEventsListener &windowCallback,
+            ScrollEventsListener &scrollCallback
+            );
     ~WindowsWindow() = default;
 
     void update() override;
@@ -29,7 +35,9 @@ private:
     uint32_t m_width;
     uint32_t m_height;
 
-    WindowEventsListener m_eventCallback;
+    WindowEventsListener m_windowEventCallback;
+    ScrollEventsListener m_scrollEventCallback;
 private:
-    void resize(uint32_t width, uint32_t height);
+    void resize(int32_t width, int32_t height);
+    void offsetZoom(int32_t offset);
 };

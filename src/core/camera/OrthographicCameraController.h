@@ -9,6 +9,7 @@ public:
 
     void update() override;
     void resize(uint32_t width, uint32_t height) override;
+    void zoomBy(float offset) override;
 
     glm::mat4 getViewProjectionMatrix() override;
 
