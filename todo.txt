@@ -5,8 +5,10 @@
 	* Make vertex and fragment shaders being separate files;
 	* Implement scenes system;
 	* Refactor and clean up;
-	* Migrate libs to own forked repositories;
 	* Implement perspective camera;
+
+#25.04.2021
+    * Migrated libs to own forked repositories;
 
 # 10.04.2021
     * Added mouse wheel scroll detection;
